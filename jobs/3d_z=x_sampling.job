@@ -1,0 +1,31 @@
+#!/bin/bash
+
+#SBATCH --partition=gpu_a100
+#SBATCH --gpus=1
+#SBATCH --job-name=3dz4s
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=18
+#SBATCH --time=02:00:00
+#SBATCH --output=job_outputs/3d_z4_sampling_%A.out
+
+module purge
+module load 2024
+module load Anaconda3/2024.06-1
+source activate deeprisk_env_2024_3
+
+srun python experiments/biobank_reconstruction_3d_new_loader_sampling.py \
+    --config.run_name="3d_z4_2048l_64d_sampling" \
+    --config.recon_enf.freq_mult="(30.0, 60.0)" \
+    --config.optim.inner_lr="(0., 60., 0.)" \
+    --config.optim.lr_enf=5e-4 \
+    --config.dataset.num_patients_train=50 \
+    --config.dataset.num_patients_test=10 \
+    --config.recon_enf.num_latents=2048 \
+    --config.recon_enf.latent_dim=64 \
+    --config.recon_enf.num_hidden=128 \
+    --config.train.batch_size=4 \
+    --config.recon_enf.k_nearest=4 \
+    --config.optim.first_order_maml=False \
+    --config.train.num_epochs_pretrain=100 \
+    --config.dataset.z_indices="(0,1,2,3)" \
+    --config.train.log_interval=200

@@ -1,0 +1,75 @@
+============================================================================================== 
+Warning! Mixing Conda and module environments may lead to corruption of the
+user environment. 
+We do not recommend users mixing those two environments unless absolutely
+necessary. Note that 
+SURF does not provide any support for Conda environment.
+For more information, please refer to our software policy page:
+https://servicedesk.surf.nl/wiki/display/WIKI/Software+policy+Snellius#SoftwarepolicySnellius-UseofAnacondaandMinicondaenvironmentsonSnellius 
+
+Remember that many packages have already been installed on the system and can
+be loaded using 
+the 'module load <package__name>' command. If you are uncertain if a package is
+already available 
+on the system, please use 'module avail' or 'module spider' to search for it.
+============================================================================================== 
+wandb: Currently logged in as: jessewiers (jessewiers-university-of-amsterdam) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Using wandb-core as the SDK backend.  Please refer to https://wandb.me/wandb-core for more information.
+wandb: Tracking run with wandb version 0.19.6
+wandb: Run data is saved locally in /gpfs/home4/jwiers/deeprisk/new_codebase/enf-min-jax-version-2/wandb/run-20250404_112409-lpwq8py6
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run 3d_z2_512l_64d_high_precision
+wandb: ⭐️ View project at https://wandb.ai/jessewiers-university-of-amsterdam/enf-min-bio-scratch-3d
+wandb: 🚀 View run at https://wandb.ai/jessewiers-university-of-amsterdam/enf-min-bio-scratch-3d/runs/lpwq8py6
+INFO:2025-04-04 11:24:31,537:jax._src.xla_bridge:945: Unable to initialize backend 'rocm': module 'jaxlib.xla_extension' has no attribute 'GpuAllocatorConfig'
+I0404 11:24:31.537261 22482291078208 xla_bridge.py:945] Unable to initialize backend 'rocm': module 'jaxlib.xla_extension' has no attribute 'GpuAllocatorConfig'
+INFO:2025-04-04 11:24:31,544:jax._src.xla_bridge:945: Unable to initialize backend 'tpu': INTERNAL: Failed to open libtpu.so: libtpu.so: cannot open shared object file: No such file or directory
+I0404 11:24:31.544471 22482291078208 xla_bridge.py:945] Unable to initialize backend 'tpu': INTERNAL: Failed to open libtpu.so: libtpu.so: cannot open shared object file: No such file or directory
+2025-04-04 11:24:41.998648: W external/xla/xla/hlo/transforms/simplifiers/hlo_rematerialization.cc:3021] Can't reduce memory use below 33.76GiB (36252659018 bytes) by rematerialization; only reduced to 67.30GiB (72261963764 bytes), down from 69.17GiB (74268546228 bytes) originally
+2025-04-04 11:24:58.035416: W external/xla/xla/tsl/framework/bfc_allocator.cc:501] Allocator (GPU_0_bfc) ran out of memory trying to allocate 68.19GiB (rounded to 73218025472)requested by op 
+2025-04-04 11:24:58.035610: W external/xla/xla/tsl/framework/bfc_allocator.cc:512] **__________________________________________________________________________________________________
+E0404 11:24:58.035644 1555557 pjrt_stream_executor_client.cc:3045] Execution of replica 0 failed: RESOURCE_EXHAUSTED: Out of memory while trying to allocate 73218025336 bytes. [tf-allocator-allocation-error='']
+Using z_indices:  [0, 1, 2, 3, 4]
+Biobank NIFTI: num_patients train = 50
+Number of timesteps without all slices:  0
+Number of datapoints: 2500
+Using z_indices:  [0, 1, 2, 3, 4]
+Biobank NIFTI: num_patients test = 10
+Number of timesteps without all slices:  0
+Number of datapoints: 500
+using uneven grid positions
+using uneven grid positions
+Traceback (most recent call last):
+  File "/gpfs/home4/jwiers/deeprisk/new_codebase/enf-min-jax-version-2/experiments/biobank_reconstruction_3d.py", line 254, in <module>
+    app.run(main)
+  File "/home/jwiers/.local/lib/python3.12/site-packages/absl/app.py", line 308, in run
+    _run_main(main, args)
+  File "/home/jwiers/.local/lib/python3.12/site-packages/absl/app.py", line 254, in _run_main
+    sys.exit(main(argv))
+             ^^^^^^^^^^
+  File "/gpfs/home4/jwiers/deeprisk/new_codebase/enf-min-jax-version-2/experiments/biobank_reconstruction_3d.py", line 227, in main
+    (loss, z), recon_enf_params, recon_enf_opt_state, key = recon_outer_step(
+                                                            ^^^^^^^^^^^^^^^^^
+jaxlib.xla_extension.XlaRuntimeError: RESOURCE_EXHAUSTED: Out of memory while trying to allocate 73218025336 bytes.
+--------------------
+For simplicity, JAX has removed its internal frames from the traceback of the following exception. Set JAX_TRACEBACK_FILTERING=off to include these.
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33m3d_z2_512l_64d_high_precision[0m at: [34mhttps://wandb.ai/jessewiers-university-of-amsterdam/enf-min-bio-scratch-3d/runs/lpwq8py6[0m
+[1;34mwandb[0m: Find logs at: [1;35mwandb/run-20250404_112409-lpwq8py6/logs[0m
+srun: error: gcn54: task 0: Exited with exit code 1
+srun: Terminating StepId=10973362.0
+
+JOB STATISTICS
+==============
+Job ID: 10973362
+Cluster: snellius
+User/Group: jwiers/jwiers
+State: RUNNING
+Nodes: 1
+Cores per node: 18
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 00:21:36 core-walltime
+Job Wall-clock time: 00:01:12
+Memory Utilized: 0.00 MB
+Memory Efficiency: 0.00% of 120.00 GB (120.00 GB/node)
+WARNING: Efficiency statistics can only be obtained after the job has ended as seff tool is based on the accounting database data.

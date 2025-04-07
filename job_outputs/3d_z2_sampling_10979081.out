@@ -1,0 +1,73 @@
+============================================================================================== 
+Warning! Mixing Conda and module environments may lead to corruption of the
+user environment. 
+We do not recommend users mixing those two environments unless absolutely
+necessary. Note that 
+SURF does not provide any support for Conda environment.
+For more information, please refer to our software policy page:
+https://servicedesk.surf.nl/wiki/display/WIKI/Software+policy+Snellius#SoftwarepolicySnellius-UseofAnacondaandMinicondaenvironmentsonSnellius 
+
+Remember that many packages have already been installed on the system and can
+be loaded using 
+the 'module load <package__name>' command. If you are uncertain if a package is
+already available 
+on the system, please use 'module avail' or 'module spider' to search for it.
+============================================================================================== 
+wandb: Currently logged in as: jessewiers (jessewiers-university-of-amsterdam). Use `wandb login --relogin` to force relogin
+wandb: Using wandb-core as the SDK backend.  Please refer to https://wandb.me/wandb-core for more information.
+wandb: Tracking run with wandb version 0.19.4
+wandb: Run data is saved locally in /gpfs/home4/jwiers/deeprisk/new_codebase/enf-min-jax-version-2/wandb/run-20250404_151947-xbr6a1yw
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run 3d_z2_512l_64d_uneven_sampling_high_precision_knearest_false
+wandb: ⭐️ View project at https://wandb.ai/jessewiers-university-of-amsterdam/enf-min-bio-scratch-3d
+wandb: 🚀 View run at https://wandb.ai/jessewiers-university-of-amsterdam/enf-min-bio-scratch-3d/runs/xbr6a1yw
+INFO:2025-04-04 15:20:05,254:jax._src.xla_bridge:945: Unable to initialize backend 'rocm': module 'jaxlib.xla_extension' has no attribute 'GpuAllocatorConfig'
+I0404 15:20:05.254306 22770672284160 xla_bridge.py:945] Unable to initialize backend 'rocm': module 'jaxlib.xla_extension' has no attribute 'GpuAllocatorConfig'
+INFO:2025-04-04 15:20:05,261:jax._src.xla_bridge:945: Unable to initialize backend 'tpu': INTERNAL: Failed to open libtpu.so: libtpu.so: cannot open shared object file: No such file or directory
+I0404 15:20:05.261279 22770672284160 xla_bridge.py:945] Unable to initialize backend 'tpu': INTERNAL: Failed to open libtpu.so: libtpu.so: cannot open shared object file: No such file or directory
+Using z_indices:  [0, 1]
+Biobank NIFTI: num_patients train = 50
+Number of timesteps without all slices:  0
+Number of datapoints: 2500
+Using z_indices:  [0, 1]
+Biobank NIFTI: num_patients test = 10
+Number of timesteps without all slices:  0
+Number of datapoints: 500
+using uneven grid positions
+Traceback (most recent call last):
+  File "/gpfs/home4/jwiers/deeprisk/new_codebase/enf-min-jax-version-2/experiments/biobank_reconstruction_3d_new_loader_sampling.py", line 282, in <module>
+    app.run(main)
+  File "/home/jwiers/.local/lib/python3.11/site-packages/absl/app.py", line 308, in run
+    _run_main(main, args)
+  File "/home/jwiers/.local/lib/python3.11/site-packages/absl/app.py", line 254, in _run_main
+    sys.exit(main(argv))
+             ^^^^^^^^^^
+  File "/gpfs/home4/jwiers/deeprisk/new_codebase/enf-min-jax-version-2/experiments/biobank_reconstruction_3d_new_loader_sampling.py", line 164, in main
+    recon_enf_params = recon_enf.init(key, x[:, :num_subsampled_points, :], *temp_z)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/home4/jwiers/deeprisk/new_codebase/enf-min-jax-version-2/enf/model.py", line 57, in setup
+    self.k_nearest_boolean = self.k_nearest_boolean
+    ^^^^^^^^^^^^^^^^^^^^^^
+flax.errors.SetAttributeInModuleSetupError: Module construction attributes are frozen. (https://flax.readthedocs.io/en/latest/api_reference/flax.errors.html#flax.errors.SetAttributeInModuleSetupError)
+--------------------
+For simplicity, JAX has removed its internal frames from the traceback of the following exception. Set JAX_TRACEBACK_FILTERING=off to include these.
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33m3d_z2_512l_64d_uneven_sampling_high_precision_knearest_false[0m at: [34mhttps://wandb.ai/jessewiers-university-of-amsterdam/enf-min-bio-scratch-3d/runs/xbr6a1yw[0m
+[1;34mwandb[0m: Find logs at: [1;35mwandb/run-20250404_151947-xbr6a1yw/logs[0m
+srun: error: gcn142: task 0: Exited with exit code 1
+srun: Terminating StepId=10979081.0
+
+JOB STATISTICS
+==============
+Job ID: 10979081
+Cluster: snellius
+User/Group: jwiers/jwiers
+State: RUNNING
+Nodes: 1
+Cores per node: 16
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 00:11:12 core-walltime
+Job Wall-clock time: 00:00:42
+Memory Utilized: 0.00 MB
+Memory Efficiency: 0.00% of 180.00 GB (180.00 GB/node)
+WARNING: Efficiency statistics can only be obtained after the job has ended as seff tool is based on the accounting database data.
