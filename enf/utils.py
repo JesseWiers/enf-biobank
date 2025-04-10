@@ -77,15 +77,20 @@ def initialize_latents(
     window_scale: float = 2.0,
     noise_scale: float = 0.1,
     z_positions: int = 2,
+    even_sampling: bool = True,
 ) -> Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray]:
     """Initialize the latent variables based on the bi-invariant type."""
     key, subkey = jax.random.split(key)
 
     if bi_invariant_cls == TranslationBI:
         # For translation-only, positions are same dimension as data
-        # pose = initialize_grid_positions(batch_size, num_latents, data_dim)
-        pose = initialize_uneven_grid_positions(batch_size, num_latents, z_positions=z_positions)
-        print("using uneven grid positions")
+        
+        if even_sampling:
+            pose = initialize_grid_positions(batch_size, num_latents, data_dim)
+            print("using even grid positions")
+        else:
+            pose = initialize_uneven_grid_positions(batch_size, num_latents, z_positions=z_positions)
+            print("using uneven grid positions")
         
     elif bi_invariant_cls == RotoTranslationBI2D:
         if data_dim != 2:

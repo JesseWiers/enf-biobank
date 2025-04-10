@@ -1,0 +1,33 @@
+============================================================================================== 
+Warning! Mixing Conda and module environments may lead to corruption of the
+user environment. 
+We do not recommend users mixing those two environments unless absolutely
+necessary. Note that 
+SURF does not provide any support for Conda environment.
+For more information, please refer to our software policy page:
+https://servicedesk.surf.nl/wiki/display/WIKI/Software+policy+Snellius#SoftwarepolicySnellius-UseofAnacondaandMinicondaenvironmentsonSnellius 
+
+Remember that many packages have already been installed on the system and can
+be loaded using 
+the 'module load <package__name>' command. If you are uncertain if a package is
+already available 
+on the system, please use 'module avail' or 'module spider' to search for it.
+============================================================================================== 
+wandb: Currently logged in as: jessewiers (jessewiers-university-of-amsterdam). Use `wandb login --relogin` to force relogin
+wandb: Using wandb-core as the SDK backend.  Please refer to https://wandb.me/wandb-core for more information.
+wandb: Tracking run with wandb version 0.19.4
+wandb: Run data is saved locally in /gpfs/home4/jwiers/deeprisk/new_codebase/enf-biobank/wandb/run-20250410_114504-ufow9tms
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run z=1
+wandb: ⭐️ View project at https://wandb.ai/jessewiers-university-of-amsterdam/enf-min-bio-scratch-3d-best-settings
+wandb: 🚀 View run at https://wandb.ai/jessewiers-university-of-amsterdam/enf-min-bio-scratch-3d-best-settings/runs/ufow9tms
+INFO:2025-04-10 11:45:20,322:jax._src.xla_bridge:945: Unable to initialize backend 'rocm': module 'jaxlib.xla_extension' has no attribute 'GpuAllocatorConfig'
+I0410 11:45:20.322622 22537287291392 xla_bridge.py:945] Unable to initialize backend 'rocm': module 'jaxlib.xla_extension' has no attribute 'GpuAllocatorConfig'
+INFO:2025-04-10 11:45:20,335:jax._src.xla_bridge:945: Unable to initialize backend 'tpu': INTERNAL: Failed to open libtpu.so: libtpu.so: cannot open shared object file: No such file or directory
+I0410 11:45:20.335561 22537287291392 xla_bridge.py:945] Unable to initialize backend 'tpu': INTERNAL: Failed to open libtpu.so: libtpu.so: cannot open shared object file: No such file or directory
+I0410 11:47:04.714233 22537287291392 biobank_reconstruction_3d_new_loader_sampling.py:282] RECON ep 0 / step 200 || mse: 0.018753478303551674
+I0410 11:48:31.350155 22537287291392 biobank_reconstruction_3d_new_loader_sampling.py:282] RECON ep 0 / step 400 || mse: 0.007126047741621733
+I0410 11:49:57.991543 22537287291392 biobank_reconstruction_3d_new_loader_sampling.py:282] RECON ep 0 / step 600 || mse: 0.004343120846897364
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+slurmstepd: error: *** STEP 11113484.0 ON gcn154 CANCELLED AT 2025-04-10T11:50:24 ***
+slurmstepd: error: *** JOB 11113484 ON gcn154 CANCELLED AT 2025-04-10T11:50:24 ***

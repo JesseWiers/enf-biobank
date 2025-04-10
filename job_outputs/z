@@ -1,0 +1,14 @@
+
+JOB STATISTICS
+==============
+Job ID: 11116179
+Cluster: snellius
+User/Group: jwiers/jwiers
+State: TIMEOUT (exit code 0)
+Nodes: 1
+Cores per node: 16
+CPU Utilized: 00:02:00
+CPU Efficiency: 0.21% of 16:04:00 core-walltime
+Job Wall-clock time: 01:00:15
+Memory Utilized: 4.11 GB
+Memory Efficiency: 2.28% of 180.00 GB (180.00 GB/node)

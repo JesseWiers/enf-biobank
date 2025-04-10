@@ -1,0 +1,222 @@
+============================================================================================== 
+Warning! Mixing Conda and module environments may lead to corruption of the
+user environment. 
+We do not recommend users mixing those two environments unless absolutely
+necessary. Note that 
+SURF does not provide any support for Conda environment.
+For more information, please refer to our software policy page:
+https://servicedesk.surf.nl/wiki/display/WIKI/Software+policy+Snellius#SoftwarepolicySnellius-UseofAnacondaandMinicondaenvironmentsonSnellius 
+
+Remember that many packages have already been installed on the system and can
+be loaded using 
+the 'module load <package__name>' command. If you are uncertain if a package is
+already available 
+on the system, please use 'module avail' or 'module spider' to search for it.
+============================================================================================== 
+wandb: Currently logged in as: jessewiers (jessewiers-university-of-amsterdam). Use `wandb login --relogin` to force relogin
+wandb: Using wandb-core as the SDK backend.  Please refer to https://wandb.me/wandb-core for more information.
+wandb: Tracking run with wandb version 0.19.4
+wandb: Run data is saved locally in /gpfs/home4/jwiers/deeprisk/new_codebase/enf-biobank/wandb/run-20250410_140016-421yua0o
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run 512l_64d_z=4
+wandb: ⭐️ View project at https://wandb.ai/jessewiers-university-of-amsterdam/Recon3D-10-04-investigation_z%3D2%2B
+wandb: 🚀 View run at https://wandb.ai/jessewiers-university-of-amsterdam/Recon3D-10-04-investigation_z%3D2%2B/runs/421yua0o
+INFO:2025-04-10 14:00:33,510:jax._src.xla_bridge:945: Unable to initialize backend 'rocm': module 'jaxlib.xla_extension' has no attribute 'GpuAllocatorConfig'
+I0410 14:00:33.510577 22422559343104 xla_bridge.py:945] Unable to initialize backend 'rocm': module 'jaxlib.xla_extension' has no attribute 'GpuAllocatorConfig'
+INFO:2025-04-10 14:00:33,523:jax._src.xla_bridge:945: Unable to initialize backend 'tpu': INTERNAL: Failed to open libtpu.so: libtpu.so: cannot open shared object file: No such file or directory
+I0410 14:00:33.523475 22422559343104 xla_bridge.py:945] Unable to initialize backend 'tpu': INTERNAL: Failed to open libtpu.so: libtpu.so: cannot open shared object file: No such file or directory
+I0410 14:01:24.401615 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 0 / step 200 || mse: 0.03047826699912548
+I0410 14:01:58.724196 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 0 / step 400 || mse: 0.02005755342543125
+I0410 14:02:33.051241 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 0 / step 600 || mse: 0.017715761438012123
+I0410 14:03:07.363506 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 1 / step 800 || mse: 0.015017583034932613
+I0410 14:03:41.663095 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 1 / step 1000 || mse: 0.015460905618965626
+I0410 14:04:15.968300 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 1 / step 1200 || mse: 0.01392295677214861
+I0410 14:04:50.294993 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 2 / step 1400 || mse: 0.013490772806107998
+I0410 14:05:24.644391 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 2 / step 1600 || mse: 0.013820300810039043
+I0410 14:05:58.999850 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 2 / step 1800 || mse: 0.012903111055493355
+I0410 14:06:33.321825 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 3 / step 2000 || mse: 0.012724310159683228
+I0410 14:07:07.616257 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 3 / step 2200 || mse: 0.013467549346387386
+I0410 14:07:41.963007 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 3 / step 2400 || mse: 0.010996012948453426
+I0410 14:08:16.301664 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 4 / step 2600 || mse: 0.011819025501608849
+I0410 14:08:50.641487 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 4 / step 2800 || mse: 0.01172863319516182
+I0410 14:09:24.991097 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 4 / step 3000 || mse: 0.010011601261794567
+I0410 14:09:59.333411 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 5 / step 3200 || mse: 0.011264086700975895
+I0410 14:10:33.680927 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 5 / step 3400 || mse: 0.010259492322802544
+I0410 14:11:08.044050 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 5 / step 3600 || mse: 0.010172983631491661
+I0410 14:11:42.347582 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 6 / step 3800 || mse: 0.010579443536698818
+I0410 14:12:16.934461 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 6 / step 4000 || mse: 0.009691688232123852
+I0410 14:12:51.245353 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 6 / step 4200 || mse: 0.009901869110763073
+I0410 14:13:25.545457 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 7 / step 4400 || mse: 0.009653599932789803
+I0410 14:13:59.852289 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 7 / step 4600 || mse: 0.008620004169642925
+I0410 14:14:34.167426 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 7 / step 4800 || mse: 0.009780005551874638
+I0410 14:15:08.486311 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 7 / step 5000 || mse: 0.008812319487333298
+I0410 14:15:42.814533 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 8 / step 5200 || mse: 0.008483926765620708
+I0410 14:16:17.152877 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 8 / step 5400 || mse: 0.008374790661036968
+I0410 14:16:51.492453 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 8 / step 5600 || mse: 0.008903670124709606
+I0410 14:17:25.825950 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 9 / step 5800 || mse: 0.008001863025128841
+I0410 14:18:00.162584 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 9 / step 6000 || mse: 0.007932278327643871
+I0410 14:18:34.502894 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 9 / step 6200 || mse: 0.007956433109939098
+I0410 14:19:08.837492 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 10 / step 6400 || mse: 0.00712107727304101
+I0410 14:19:43.188768 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 10 / step 6600 || mse: 0.00799308530986309
+I0410 14:20:17.544319 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 10 / step 6800 || mse: 0.006874180864542723
+I0410 14:20:51.887655 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 11 / step 7000 || mse: 0.007153479848057032
+I0410 14:21:26.232362 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 11 / step 7200 || mse: 0.007224049419164658
+I0410 14:22:00.580695 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 11 / step 7400 || mse: 0.007095024921000004
+I0410 14:22:34.905411 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 12 / step 7600 || mse: 0.007059354335069656
+I0410 14:23:09.553991 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 12 / step 7800 || mse: 0.007034859154373407
+I0410 14:23:43.893446 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 12 / step 8000 || mse: 0.006374155171215534
+I0410 14:24:18.214848 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 13 / step 8200 || mse: 0.006711489055305719
+I0410 14:24:52.505434 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 13 / step 8400 || mse: 0.006598190404474735
+I0410 14:25:26.797238 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 13 / step 8600 || mse: 0.006506992969661951
+I0410 14:26:01.077025 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 14 / step 8800 || mse: 0.00656484579667449
+I0410 14:26:35.359554 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 14 / step 9000 || mse: 0.00615781731903553
+I0410 14:27:09.641205 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 14 / step 9200 || mse: 0.006127385888248682
+I0410 14:27:43.910634 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 15 / step 9400 || mse: 0.006203844677656889
+I0410 14:28:18.189043 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 15 / step 9600 || mse: 0.006364341359585524
+I0410 14:28:52.475663 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 15 / step 9800 || mse: 0.005770504474639893
+I0410 14:29:26.767303 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 15 / step 10000 || mse: 0.0056912763975560665
+I0410 14:30:01.050549 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 16 / step 10200 || mse: 0.005680713336914778
+I0410 14:30:35.343938 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 16 / step 10400 || mse: 0.005398982670158148
+I0410 14:31:09.637296 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 16 / step 10600 || mse: 0.005744095891714096
+I0410 14:31:43.918794 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 17 / step 10800 || mse: 0.005855743773281574
+I0410 14:32:18.256688 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 17 / step 11000 || mse: 0.005594204645603895
+I0410 14:32:52.601265 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 17 / step 11200 || mse: 0.00550474738702178
+I0410 14:33:26.920232 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 18 / step 11400 || mse: 0.0051579102873802185
+I0410 14:34:01.564636 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 18 / step 11600 || mse: 0.0050984034314751625
+I0410 14:34:35.917627 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 18 / step 11800 || mse: 0.005410709418356419
+I0410 14:35:10.224897 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 19 / step 12000 || mse: 0.005554788745939732
+I0410 14:35:44.563555 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 19 / step 12200 || mse: 0.005841657053679228
+wandb: WARNING Fatal error while uploading data. Some run data will not be synced, but it will still be written to disk. Use `wandb sync` at the end of the run to try uploading.
+I0410 14:36:18.910680 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 19 / step 12400 || mse: 0.005002678371965885
+I0410 14:36:53.243259 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 20 / step 12600 || mse: 0.004964165855199099
+I0410 14:37:27.584856 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 20 / step 12800 || mse: 0.004809551872313023
+I0410 14:38:01.932283 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 20 / step 13000 || mse: 0.004660963546484709
+I0410 14:38:36.263792 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 21 / step 13200 || mse: 0.004590406082570553
+I0410 14:39:10.605533 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 21 / step 13400 || mse: 0.004610014613717794
+I0410 14:39:44.954723 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 21 / step 13600 || mse: 0.004604544024914503
+I0410 14:40:19.280508 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 22 / step 13800 || mse: 0.005011878442019224
+I0410 14:40:53.612334 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 22 / step 14000 || mse: 0.004594316240400076
+I0410 14:41:27.960442 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 22 / step 14200 || mse: 0.005342908203601837
+I0410 14:42:02.293562 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 23 / step 14400 || mse: 0.004723330959677696
+I0410 14:42:36.629827 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 23 / step 14600 || mse: 0.00454976549372077
+I0410 14:43:10.972995 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 23 / step 14800 || mse: 0.004410961177200079
+I0410 14:43:45.321142 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 23 / step 15000 || mse: 0.0043011917732656
+I0410 14:44:19.633627 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 24 / step 15200 || mse: 0.004217568784952164
+I0410 14:44:53.970301 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 24 / step 15400 || mse: 0.004494494758546352
+I0410 14:45:28.622864 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 24 / step 15600 || mse: 0.004397948272526264
+I0410 14:46:02.929477 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 25 / step 15800 || mse: 0.004055246710777283
+I0410 14:46:37.246493 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 25 / step 16000 || mse: 0.0042952499352395535
+I0410 14:47:11.569565 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 25 / step 16200 || mse: 0.0040687271393835545
+I0410 14:47:45.894851 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 26 / step 16400 || mse: 0.004085393622517586
+I0410 14:48:20.243586 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 26 / step 16600 || mse: 0.004232319071888924
+I0410 14:48:54.597602 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 26 / step 16800 || mse: 0.0037078929599374533
+I0410 14:49:28.937879 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 27 / step 17000 || mse: 0.003961374517530203
+I0410 14:50:03.285700 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 27 / step 17200 || mse: 0.0036070633213967085
+I0410 14:50:37.642088 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 27 / step 17400 || mse: 0.004144915379583836
+I0410 14:51:11.981562 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 28 / step 17600 || mse: 0.0038614184595644474
+I0410 14:51:46.273064 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 28 / step 17800 || mse: 0.004015652928501368
+I0410 14:52:20.573621 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 28 / step 18000 || mse: 0.0038619395345449448
+I0410 14:52:54.852536 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 29 / step 18200 || mse: 0.003769687144085765
+I0410 14:53:29.146795 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 29 / step 18400 || mse: 0.0037190669681876898
+I0410 14:54:03.449721 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 29 / step 18600 || mse: 0.0037643462419509888
+I0410 14:54:37.745194 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 30 / step 18800 || mse: 0.0038179035764187574
+I0410 14:55:12.069056 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 30 / step 19000 || mse: 0.003694463288411498
+I0410 14:55:46.399705 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 30 / step 19200 || mse: 0.0037612884771078825
+I0410 14:56:21.032629 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 31 / step 19400 || mse: 0.0037338973488658667
+I0410 14:56:55.362416 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 31 / step 19600 || mse: 0.0035920352675020695
+I0410 14:57:29.698071 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 31 / step 19800 || mse: 0.003525981679558754
+I0410 14:58:04.040009 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 31 / step 20000 || mse: 0.003332905936986208
+I0410 14:58:38.366310 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 32 / step 20200 || mse: 0.0034486062359064817
+I0410 14:59:12.683223 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 32 / step 20400 || mse: 0.0034071076661348343
+I0410 14:59:47.038077 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 32 / step 20600 || mse: 0.003360126866027713
+I0410 15:00:21.345326 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 33 / step 20800 || mse: 0.003342109965160489
+I0410 15:00:55.656304 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 33 / step 21000 || mse: 0.0036330248694866896
+I0410 15:01:29.971044 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 33 / step 21200 || mse: 0.003404879942536354
+I0410 15:02:04.298641 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 34 / step 21400 || mse: 0.003585469676181674
+I0410 15:02:38.634940 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 34 / step 21600 || mse: 0.0030205673538148403
+I0410 15:03:12.944512 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 34 / step 21800 || mse: 0.003315873211249709
+I0410 15:03:47.266598 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 35 / step 22000 || mse: 0.0037046687211841345
+I0410 15:04:21.612798 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 35 / step 22200 || mse: 0.003173388307914138
+I0410 15:04:55.964729 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 35 / step 22400 || mse: 0.0035900797229260206
+I0410 15:05:30.295045 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 36 / step 22600 || mse: 0.0031807951163500547
+I0410 15:06:04.642761 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 36 / step 22800 || mse: 0.003505866741761565
+I0410 15:06:38.993566 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 36 / step 23000 || mse: 0.0031040075700730085
+I0410 15:07:13.607630 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 37 / step 23200 || mse: 0.0030394315253943205
+I0410 15:07:47.921398 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 37 / step 23400 || mse: 0.0035369358956813812
+I0410 15:08:22.237752 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 37 / step 23600 || mse: 0.0033777733333408833
+I0410 15:08:56.546286 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 38 / step 23800 || mse: 0.003469881834462285
+I0410 15:09:30.856291 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 38 / step 24000 || mse: 0.0033488813787698746
+I0410 15:10:05.167221 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 38 / step 24200 || mse: 0.003042248310521245
+I0410 15:10:39.492917 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 39 / step 24400 || mse: 0.004491427447646856
+I0410 15:11:13.800460 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 39 / step 24600 || mse: 0.004093504976481199
+I0410 15:11:48.115175 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 39 / step 24800 || mse: 0.003626050427556038
+I0410 15:12:22.429439 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 39 / step 25000 || mse: 0.0032924942206591368
+I0410 15:12:56.767440 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 40 / step 25200 || mse: 0.00335787539370358
+I0410 15:13:31.113182 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 40 / step 25400 || mse: 0.003629873273894191
+I0410 15:14:05.465015 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 40 / step 25600 || mse: 0.003275342984125018
+I0410 15:14:39.803483 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 41 / step 25800 || mse: 0.0031849765218794346
+I0410 15:15:14.151475 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 41 / step 26000 || mse: 0.00349711487069726
+I0410 15:15:48.500928 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 41 / step 26200 || mse: 0.0035148572642356157
+I0410 15:16:22.800072 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 42 / step 26400 || mse: 0.0032561910338699818
+I0410 15:16:57.089787 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 42 / step 26600 || mse: 0.0033116177655756474
+I0410 15:17:31.381217 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 42 / step 26800 || mse: 0.003173530101776123
+I0410 15:18:06.008767 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 43 / step 27000 || mse: 0.0033740203361958265
+I0410 15:18:40.353622 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 43 / step 27200 || mse: 0.0028700300026685
+I0410 15:19:14.707039 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 43 / step 27400 || mse: 0.003095854539424181
+I0410 15:19:49.045064 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 44 / step 27600 || mse: 0.0032211497891694307
+I0410 15:20:23.365338 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 44 / step 27800 || mse: 0.0033416084479540586
+I0410 15:20:57.695449 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 44 / step 28000 || mse: 0.0031894580461084843
+I0410 15:21:32.002090 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 45 / step 28200 || mse: 0.0031192719470709562
+I0410 15:22:06.321251 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 45 / step 28400 || mse: 0.003033027518540621
+I0410 15:22:40.655122 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 45 / step 28600 || mse: 0.0030291478615254164
+I0410 15:23:14.990110 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 46 / step 28800 || mse: 0.003402845235541463
+I0410 15:23:49.322082 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 46 / step 29000 || mse: 0.00288178282789886
+I0410 15:24:23.651546 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 46 / step 29200 || mse: 0.0029716610442847013
+I0410 15:24:57.963119 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 47 / step 29400 || mse: 0.0031114034354686737
+I0410 15:25:32.250602 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 47 / step 29600 || mse: 0.0029805859085172415
+I0410 15:26:06.546207 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 47 / step 29800 || mse: 0.0034088995307683945
+I0410 15:26:40.853274 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 47 / step 30000 || mse: 0.003179730847477913
+I0410 15:27:15.164831 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 48 / step 30200 || mse: 0.0030885585583746433
+I0410 15:27:49.478055 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 48 / step 30400 || mse: 0.0028508694376796484
+I0410 15:28:23.800501 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 48 / step 30600 || mse: 0.003364182310178876
+I0410 15:28:58.110051 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 49 / step 30800 || mse: 0.003258837154135108
+I0410 15:29:32.711093 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 49 / step 31000 || mse: 0.0031774931121617556
+I0410 15:30:07.009132 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 49 / step 31200 || mse: 0.003156261285766959
+I0410 15:30:41.333597 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 50 / step 31400 || mse: 0.0029389539267867804
+I0410 15:31:15.679582 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 50 / step 31600 || mse: 0.0031721347477287054
+I0410 15:31:50.037786 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 50 / step 31800 || mse: 0.003071716520935297
+I0410 15:32:24.352253 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 51 / step 32000 || mse: 0.003183713648468256
+I0410 15:32:58.706356 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 51 / step 32200 || mse: 0.0029572714120149612
+I0410 15:33:33.033627 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 51 / step 32400 || mse: 0.002761482261121273
+I0410 15:34:07.353868 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 52 / step 32600 || mse: 0.005770146381109953
+I0410 15:34:41.697528 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 52 / step 32800 || mse: 0.004021810367703438
+I0410 15:35:16.051882 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 52 / step 33000 || mse: 0.003705836832523346
+I0410 15:35:50.385195 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 53 / step 33200 || mse: 0.003622839692980051
+I0410 15:36:24.720498 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 53 / step 33400 || mse: 0.0035418563056737185
+I0410 15:36:59.068594 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 53 / step 33600 || mse: 0.0032273258548229933
+I0410 15:37:33.395912 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 54 / step 33800 || mse: 0.003398723667487502
+I0410 15:38:07.737524 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 54 / step 34000 || mse: 0.003310608211904764
+I0410 15:38:42.090680 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 54 / step 34200 || mse: 0.0031740230042487383
+I0410 15:39:16.428873 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 55 / step 34400 || mse: 0.0034308158792555332
+I0410 15:39:50.715288 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 55 / step 34600 || mse: 0.0030960584990680218
+I0410 15:40:25.324193 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 55 / step 34800 || mse: 0.003083139192312956
+I0410 15:40:59.620358 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 55 / step 35000 || mse: 0.003131420584395528
+I0410 15:41:33.967883 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 56 / step 35200 || mse: 0.0028284634463489056
+I0410 15:42:08.325730 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 56 / step 35400 || mse: 0.003362513380125165
+I0410 15:42:42.686425 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 56 / step 35600 || mse: 0.003191988915205002
+I0410 15:43:17.007308 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 57 / step 35800 || mse: 0.0031967987306416035
+I0410 15:43:51.319258 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 57 / step 36000 || mse: 0.00342525914311409
+I0410 15:44:25.632895 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 57 / step 36200 || mse: 0.0030962133314460516
+I0410 15:44:59.937483 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 58 / step 36400 || mse: 0.003085459116846323
+I0410 15:45:34.284246 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 58 / step 36600 || mse: 0.002960432320833206
+I0410 15:46:08.639160 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 58 / step 36800 || mse: 0.0030132585670799017
+I0410 15:46:42.960204 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 59 / step 37000 || mse: 0.0030604770872741938
+I0410 15:47:17.283900 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 59 / step 37200 || mse: 0.003344029886648059
+I0410 15:47:51.613629 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 59 / step 37400 || mse: 0.0030359162483364344
+I0410 15:48:25.935533 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 60 / step 37600 || mse: 0.002810518955811858
+I0410 15:49:00.274876 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 60 / step 37800 || mse: 0.003125568153336644
+I0410 15:49:34.632451 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 60 / step 38000 || mse: 0.0032017703633755445
+I0410 15:50:08.971456 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 61 / step 38200 || mse: 0.003012940753251314
+I0410 15:50:43.317790 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 61 / step 38400 || mse: 0.0032796950545161963
+I0410 15:51:17.920473 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 61 / step 38600 || mse: 0.003171394346281886
+I0410 15:51:52.227365 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 62 / step 38800 || mse: 0.003125953022390604

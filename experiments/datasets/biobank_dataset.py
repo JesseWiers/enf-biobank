@@ -58,7 +58,7 @@ class BiobankNifti(Dataset):
             image_data = nifti_image.get_fdata()  # Shape: [H, W, Z, T]
             H, W, Z, T = image_data.shape
             
-                        # Define maximum for normalization 
+            # Define maximum for normalization 
             patient_max = np.max(image_data)
 
             # Iterate over timesteps

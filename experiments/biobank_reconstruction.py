@@ -27,6 +27,7 @@ def get_config():
     config.seed = 68
     config.debug = False
     config.run_name = "biobank_reconstruction"
+    config.exp_name = "test"
 
     # Reconstruction model
     config.recon_enf = ml_collections.ConfigDict()
@@ -40,6 +41,9 @@ def get_config():
 
     config.recon_enf.num_latents = 16
     config.recon_enf.latent_dim = 64
+    
+    config.recon_enf.even_sampling = True
+    config.recon_enf.gaussian_window = True
 
     # Dataset config
     config.dataset = ml_collections.ConfigDict()
@@ -121,7 +125,7 @@ def main(_):
     config = _CONFIG.value
 
     # Initialize wandb
-    run = wandb.init(project="enf-min-bio-scratch", config=config.to_dict(), mode="online" if not config.debug else "dryrun", name=config.run_name)
+    run = wandb.init(project=config.exp_name, config=config.to_dict(), mode="online" if not config.debug else "dryrun", name=config.run_name)
 
     # Load dataset, get sample image, create corresponding coordinates
     train_dloader, test_dloader = get_dataloaders('2d_biobank', config.train.batch_size, config.dataset.num_workers, num_train=config.dataset.num_patients_train, num_test=config.dataset.num_patients_test, seed=config.seed)
@@ -143,6 +147,7 @@ def main(_):
         emb_freq=config.recon_enf.freq_mult,
         nearest_k=config.recon_enf.k_nearest,
         bi_invariant=TranslationBI(),
+        gaussian_window=config.recon_enf.gaussian_window,
     )
 
     # Create dummy latents for model init
@@ -155,6 +160,7 @@ def main(_):
         bi_invariant_cls=TranslationBI,
         key=subkey,
         noise_scale=config.train.noise_scale,
+        even_sampling=config.recon_enf.even_sampling,
     )
 
     # Init the model

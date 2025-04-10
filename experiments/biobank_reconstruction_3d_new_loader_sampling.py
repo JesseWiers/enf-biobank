@@ -19,7 +19,7 @@ from enf.utils import create_coordinate_grid, initialize_latents
 
 from experiments.downstream_models.transformer_enf import TransformerClassifier
 
-# jax.config.update("jax_default_matmul_precision", "highest")
+jax.config.update("jax_default_matmul_precision", "highest")
 
 def get_config():
 
@@ -41,7 +41,8 @@ def get_config():
 
     config.recon_enf.num_latents = 128
     config.recon_enf.latent_dim = 64
-    config.recon_enf.k_nearest_boolean = True
+    config.recon_enf.gaussian_window = True
+    config.recon_enf.even_sampling = False
 
     # Dataset config
     config.dataset = ml_collections.ConfigDict()
@@ -68,6 +69,7 @@ def get_config():
 
     # Set checkpoint path
     config.run_name = "enf"
+    config.exp_name = "biobank_reconstruction"
     return config
 
 
@@ -85,6 +87,11 @@ def plot_biobank_comparison(
         original: Original images with shape (Z, H, W, C)
         reconstruction: Reconstructed images with shape (Z, H, W, C)
     """
+    
+    # NOTE: Clipping to to prevent warnings, NEWLY ADDED
+    original = jnp.clip(original, 0, 1)
+    reconstruction = jnp.clip(reconstruction, 0, 1)
+    
     num_slices = original.shape[0]  # Z is now the first dimension
     fig, axes = plt.subplots(num_slices, 2, figsize=(4, 2 * num_slices))
     fig.suptitle('Original (left) vs Reconstruction (right)')
@@ -120,8 +127,7 @@ def main(_):
     config = _CONFIG.value
 
     # Initialize wandb
-    run = wandb.init(project="enf-min-bio-scratch-3d", config=config.to_dict(), mode="online" if not config.debug else "dryrun", name=config.run_name)
-
+    run = wandb.init(project=config.exp_name, config=config.to_dict(), mode="online" if not config.debug else "dryrun", name=config.run_name)
 
     # Load dataset, get sample image, create corresponding coordinates
     train_dloader, test_dloader = get_dataloaders('3d_biobank', config.train.batch_size, config.dataset.num_workers, num_train=config.dataset.num_patients_train, num_test=config.dataset.num_patients_test, seed=config.seed, z_indices=list(config.dataset.z_indices))
@@ -144,7 +150,7 @@ def main(_):
         emb_freq=config.recon_enf.freq_mult,
         nearest_k=config.recon_enf.k_nearest,
         bi_invariant=TranslationBI(),
-        k_nearest_boolean=config.recon_enf.k_nearest_boolean,
+        gaussian_window=config.recon_enf.gaussian_window,
     )
 
     # Create dummy latents for model init
@@ -158,6 +164,7 @@ def main(_):
         key=subkey,
         noise_scale=config.train.noise_scale,
         z_positions=len(list(config.dataset.z_indices)),
+        even_sampling=config.recon_enf.even_sampling,
     )
 
     # Init the model
@@ -274,6 +281,9 @@ def main(_):
                 wandb.log({"recon-mse": sum(epoch_loss) / len(epoch_loss), "reconstruction": fig}, step=glob_step)
                 plt.close('all')
                 logging.info(f"RECON ep {epoch} / step {glob_step} || mse: {sum(epoch_loss[-10:]) / len(epoch_loss[-10:])}")
+                
+                
+                # TODO: Add loss for th
 
    
     run.finish()

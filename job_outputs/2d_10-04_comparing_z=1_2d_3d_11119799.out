@@ -1,0 +1,40 @@
+============================================================================================== 
+Warning! Mixing Conda and module environments may lead to corruption of the
+user environment. 
+We do not recommend users mixing those two environments unless absolutely
+necessary. Note that 
+SURF does not provide any support for Conda environment.
+For more information, please refer to our software policy page:
+https://servicedesk.surf.nl/wiki/display/WIKI/Software+policy+Snellius#SoftwarepolicySnellius-UseofAnacondaandMinicondaenvironmentsonSnellius 
+
+Remember that many packages have already been installed on the system and can
+be loaded using 
+the 'module load <package__name>' command. If you are uncertain if a package is
+already available 
+on the system, please use 'module avail' or 'module spider' to search for it.
+============================================================================================== 
+wandb: Currently logged in as: jessewiers (jessewiers-university-of-amsterdam). Use `wandb login --relogin` to force relogin
+wandb: Using wandb-core as the SDK backend.  Please refer to https://wandb.me/wandb-core for more information.
+wandb: Tracking run with wandb version 0.19.4
+wandb: Run data is saved locally in /gpfs/home4/jwiers/deeprisk/new_codebase/enf-biobank/wandb/run-20250410_155156-vt3gunfp
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run 512l_64d_2d
+wandb: ⭐️ View project at https://wandb.ai/jessewiers-university-of-amsterdam/Recon2D_10-04_investigating_z%3D1_2d_3d
+wandb: 🚀 View run at https://wandb.ai/jessewiers-university-of-amsterdam/Recon2D_10-04_investigating_z%3D1_2d_3d/runs/vt3gunfp
+Traceback (most recent call last):
+  File "/gpfs/home4/jwiers/deeprisk/new_codebase/enf-biobank/experiments/biobank_reconstruction.py", line 245, in <module>
+    app.run(main)
+  File "/home/jwiers/.local/lib/python3.11/site-packages/absl/app.py", line 308, in run
+    _run_main(main, args)
+  File "/home/jwiers/.local/lib/python3.11/site-packages/absl/app.py", line 254, in _run_main
+    sys.exit(main(argv))
+             ^^^^^^^^^^
+  File "/gpfs/home4/jwiers/deeprisk/new_codebase/enf-biobank/experiments/biobank_reconstruction.py", line 131, in main
+    train_dloader, test_dloader = get_dataloaders('2d_biobank', config.train.batch_size, config.dataset.num_workers, num_train=config.dataset.num_patients_train, num_test=config.dataset.num_patients_test, seed=config.seed)
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: get_dataloaders() missing 1 required positional argument: 'z_indices'
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33m512l_64d_2d[0m at: [34mhttps://wandb.ai/jessewiers-university-of-amsterdam/Recon2D_10-04_investigating_z%3D1_2d_3d/runs/vt3gunfp[0m
+[1;34mwandb[0m: Find logs at: [1;35mwandb/run-20250410_155156-vt3gunfp/logs[0m
+srun: error: gcn150: task 0: Exited with exit code 1
+srun: Terminating StepId=11119799.0

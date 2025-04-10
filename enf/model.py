@@ -34,7 +34,7 @@ class EquivariantNeuralField(nn.Module):
     emb_freq: Tuple[float, float]
     nearest_k: int
     bi_invariant: Callable
-    k_nearest_boolean: bool
+    gaussian_window: bool
     
 
     def setup(self):
@@ -90,7 +90,7 @@ class EquivariantNeuralField(nn.Module):
         v = v.reshape(v.shape[:-1] + (self.num_heads, -1))
 
         # Calculate the attention weights, apply gaussian mask based on bi-invariant magnitude, broadcasting over heads.
-        if self.k_nearest_boolean:
+        if self.gaussian_window:
             att_logits = (q * k).sum(axis=-1, keepdims=True) - ((1 / g ** 2) * zx_mag)[..., None, :]
         else:
             att_logits = (q * k).sum(axis=-1, keepdims=True) # NOT APPLY GAUSSIAN 
