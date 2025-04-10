@@ -58,14 +58,15 @@ class BiobankNifti(Dataset):
             image_data = nifti_image.get_fdata()  # Shape: [H, W, Z, T]
             H, W, Z, T = image_data.shape
             
-            # Define maximum for normalization 
-            patient_max = np.max(image_data)
-
             # Iterate over timesteps
             for t in range(T):
                 for z in range(Z):
                     image = image_data[:, :, z, t] # Load image 
-                    image = np.array(image) / patient_max # Normalization might need to be changed
+                    
+                    # Normalize per slice
+                    slice_max = np.max(image)
+                    image = np.array(image) / slice_max
+             
                     image = image[..., np.newaxis] # Add axis
                                         
                     self.data.append(image)
@@ -103,6 +104,8 @@ class BiobankNifti3D(Dataset):
         
         patient_paths = os.listdir(root)
 
+        patient_paths = sorted(os.listdir(root))
+
         if split == 'train':
             patient_paths = patient_paths[:1150]
 
@@ -137,20 +140,36 @@ class BiobankNifti3D(Dataset):
             # Iterate over timesteps
             for t in range(T):
                 # Check if all requested z_indices exist
-                if all(z < Z for z in self.z_indices):
-                    # Stack along first axis (axis=0) instead of last axis
-                    stacked_images = np.stack([image_data[:, :, z, t] for z in self.z_indices], axis=0)
+                
+                if len(self.z_indices) == 1:
+                    for z in range(Z):
+                        image = image_data[:, :, z, t]
+                        # Normalize per slice
+                        slice_max = np.max(image)
+                        if slice_max > 0:  # Avoid division by zero
+                            image = image / slice_max
+                        image = image[..., np.newaxis]
+                        image = image[np.newaxis, ...]
+                        self.data.append(image)
                     
-                    # Normalize to [0, 1] range
-                    stacked_images = stacked_images / np.max(stacked_images)
+                else: 
+                    if all(z < Z for z in self.z_indices):
+                        # Stack along first axis (axis=0) instead of last axis
+                        stacked_images = np.stack([image_data[:, :, z, t] for z in self.z_indices], axis=0)
+                        
+                        # Normalize each slice separately
+                        for i in range(len(self.z_indices)):
+                            slice_max = np.max(stacked_images[i])
+                            if slice_max > 0:  # Avoid division by zero
+                                stacked_images[i] = stacked_images[i] / slice_max
 
-                    # Add a channel axis: [Z_indices, H, W, 1]
-                    stacked_images = stacked_images[..., np.newaxis]
-                    
-                    self.data.append(stacked_images)
-                else:
-                    counter += 1
-                    # print(f"Skipping timestep {t} for {patient_path}: missing z_indices.")
+                        # Add a channel axis: [Z_indices, H, W, 1]
+                        stacked_images = stacked_images[..., np.newaxis]
+                        
+                        self.data.append(stacked_images)
+                    else:
+                        counter += 1
+                        # print(f"Skipping timestep {t} for {patient_path}: missing z_indices.")
 
         print("Number of timesteps without all slices: ", counter)
         print(f"Number of datapoints: {len(self.data)}")

@@ -220,3 +220,34 @@ I0410 15:50:08.971456 22422559343104 biobank_reconstruction_3d_new_loader_sampli
 I0410 15:50:43.317790 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 61 / step 38400 || mse: 0.0032796950545161963
 I0410 15:51:17.920473 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 61 / step 38600 || mse: 0.003171394346281886
 I0410 15:51:52.227365 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 62 / step 38800 || mse: 0.003125953022390604
+I0410 15:52:26.571076 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 62 / step 39000 || mse: 0.003246684791520238
+I0410 15:53:00.920057 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 62 / step 39200 || mse: 0.0029704291373491287
+I0410 15:53:35.258805 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 63 / step 39400 || mse: 0.0029118824750185013
+I0410 15:54:09.603640 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 63 / step 39600 || mse: 0.002976688789203763
+I0410 15:54:43.956928 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 63 / step 39800 || mse: 0.0033014893997460604
+I0410 15:55:18.311613 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 63 / step 40000 || mse: 0.002996251219883561
+I0410 15:55:52.619244 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 64 / step 40200 || mse: 0.0029973983764648438
+I0410 15:56:26.931241 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 64 / step 40400 || mse: 0.0028232489712536335
+I0410 15:57:01.243630 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 64 / step 40600 || mse: 0.0031886424403637648
+I0410 15:57:35.585783 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 65 / step 40800 || mse: 0.003918168600648642
+I0410 15:58:09.937138 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 65 / step 41000 || mse: 0.004754275549203157
+I0410 15:58:44.288736 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 65 / step 41200 || mse: 0.003790884045884013
+I0410 15:59:18.619939 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 66 / step 41400 || mse: 0.0036989618092775345
+I0410 15:59:52.955058 22422559343104 biobank_reconstruction_3d_new_loader_sampling.py:283] RECON ep 66 / step 41600 || mse: 0.003444503992795944
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+slurmstepd: error: *** JOB 11117638 ON gcn142 CANCELLED AT 2025-04-10T16:00:14 DUE TO TIME LIMIT ***
+slurmstepd: error: *** STEP 11117638.0 ON gcn142 CANCELLED AT 2025-04-10T16:00:14 DUE TO TIME LIMIT ***
+
+JOB STATISTICS
+==============
+Job ID: 11117638
+Cluster: snellius
+User/Group: jwiers/jwiers
+State: TIMEOUT (exit code 0)
+Nodes: 1
+Cores per node: 16
+CPU Utilized: 00:03:49
+CPU Efficiency: 0.20% of 1-08:04:48 core-walltime
+Job Wall-clock time: 02:00:18
+Memory Utilized: 4.26 GB
+Memory Efficiency: 2.37% of 180.00 GB (180.00 GB/node)

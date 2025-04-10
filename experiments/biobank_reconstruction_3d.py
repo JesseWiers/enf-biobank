@@ -49,7 +49,7 @@ def get_config():
     config.dataset.num_workers = 0
     config.dataset.num_patients_train = 10
     config.dataset.num_patients_test = 2
-    config.dataset.z_indices = (0,1)
+    config.dataset.z_indices = (0, )
 
     # Optimizer config
     config.optim = ml_collections.ConfigDict()
@@ -244,7 +244,7 @@ def main(_):
         epoch_loss = []
         for i, (img, _) in enumerate(train_dloader):
                         
-            y = jnp.reshape(img, (img.shape[0], -1, img.shape[-1]))
+            y = jnp.reshape(img, (img.shape[0], -1, img.shape[-1])) # Collapses (H,W, (Z))
 
             x_i, y_i = subsample_xy(key, x, y)
             

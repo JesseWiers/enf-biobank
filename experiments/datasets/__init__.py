@@ -36,7 +36,7 @@ def numpy_collate(batch: list[np.ndarray]) -> np.ndarray:
         return np.array(batch)
 
 
-def get_dataloaders(dataset_name: str, batch_size: int, num_workers: int, num_train: int, num_test: int, seed: int, z_indices: list[int]):
+def get_dataloaders(dataset_name: str, batch_size: int, num_workers: int, num_train: int, num_test: int, seed: int, z_indices:list[int] = [0,1]):
     """ 
     Returns specified dataset dataloaders.
 

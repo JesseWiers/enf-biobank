@@ -2,7 +2,7 @@
 
 #SBATCH --partition=gpu_h100
 #SBATCH --gpus=1
-#SBATCH --job-name=2d
+#SBATCH --job-name=3d
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=16
 #SBATCH --time=01:00:00
@@ -15,27 +15,8 @@ source activate deeprisk_env_2024_3
 
 export XLA_PYTHON_CLIENT_MEM_FRACTION=0.9
 
-srun python experiments/biobank_reconstruction.py \
-    --config.run_name="512l_64d_2d" \
-    --config.exp_name="Recon2D_10-04_investigating_z=1_2d_3d" \
-    --config.recon_enf.freq_mult="(30.0, 60.0)" \
-    --config.optim.inner_lr="(0., 60., 0.)" \
-    --config.optim.lr_enf=5e-4 \
-    --config.dataset.num_patients_train=50 \
-    --config.dataset.num_patients_test=10 \
-    --config.recon_enf.num_latents=512 \
-    --config.recon_enf.latent_dim=64 \
-    --config.recon_enf.num_hidden=128 \
-    --config.train.batch_size=4 \
-    --config.recon_enf.k_nearest=4 \
-    --config.train.num_epochs_pretrain=100 \
-    --config.train.log_interval=200 \
-    --config.recon_enf.even_sampling=True \
-    --config.recon_enf.gaussian_window=True \
-    --config.optim.first_order_maml=False 
-
-# srun python experiments/biobank_reconstruction_3d_new_loader_sampling.py \
-#     --config.run_name="512l_64d_3d" \
+# srun python experiments/biobank_reconstruction.py \
+#     --config.run_name="512l_64d_2d" \
 #     --config.exp_name="Recon2D_10-04_investigating_z=1_2d_3d" \
 #     --config.recon_enf.freq_mult="(30.0, 60.0)" \
 #     --config.optim.inner_lr="(0., 60., 0.)" \
@@ -48,8 +29,27 @@ srun python experiments/biobank_reconstruction.py \
 #     --config.train.batch_size=4 \
 #     --config.recon_enf.k_nearest=4 \
 #     --config.train.num_epochs_pretrain=100 \
-#     --config.dataset.z_indices="(0,1,2,3,4,5,6,7)" \
 #     --config.train.log_interval=200 \
 #     --config.recon_enf.even_sampling=True \
 #     --config.recon_enf.gaussian_window=True \
 #     --config.optim.first_order_maml=False 
+
+srun python experiments/biobank_reconstruction_3d.py \
+    --config.run_name="512l_64d_3d" \
+    --config.exp_name="Recon2D_10-04_investigating_z=1_2d_3d" \
+    --config.recon_enf.freq_mult="(30.0, 60.0)" \
+    --config.optim.inner_lr="(0., 60., 0.)" \
+    --config.optim.lr_enf=5e-4 \
+    --config.dataset.num_patients_train=50 \
+    --config.dataset.num_patients_test=10 \
+    --config.recon_enf.num_latents=512 \
+    --config.recon_enf.latent_dim=64 \
+    --config.recon_enf.num_hidden=128 \
+    --config.train.batch_size=4 \
+    --config.recon_enf.k_nearest=4 \
+    --config.train.num_epochs_pretrain=100 \
+    --config.dataset.z_indices="(0, )" \
+    --config.train.log_interval=200 \
+    --config.recon_enf.even_sampling=True \
+    --config.recon_enf.gaussian_window=True \
+    --config.optim.first_order_maml=False 

@@ -13,3 +13,73 @@ Job Wall-clock time: 00:00:22
 Memory Utilized: 0.00 MB
 Memory Efficiency: 0.00% of 180.00 GB (180.00 GB/node)
 WARNING: Efficiency statistics can only be obtained after the job has ended as seff tool is based on the accounting database data.
+
+JOB STATISTICS
+==============
+Job ID: 11119877
+Cluster: snellius
+User/Group: jwiers/jwiers
+State: CANCELLED (exit code 0)
+Nodes: 1
+Cores per node: 16
+CPU Utilized: 00:27:36
+CPU Efficiency: 6.35% of 07:14:24 core-walltime
+Job Wall-clock time: 00:27:09
+Memory Utilized: 8.88 GB
+Memory Efficiency: 4.93% of 180.00 GB (180.00 GB/node)
+
+JOB STATISTICS
+==============
+Job ID: 11120864
+Cluster: snellius
+User/Group: jwiers/jwiers
+State: CANCELLED (exit code 0)
+Nodes: 1
+Cores per node: 16
+CPU Utilized: 00:00:23
+CPU Efficiency: 3.69% of 00:10:24 core-walltime
+Job Wall-clock time: 00:00:39
+Memory Utilized: 1.64 MB
+Memory Efficiency: 0.00% of 180.00 GB (180.00 GB/node)
+
+JOB STATISTICS
+==============
+Job ID: 11120848
+Cluster: snellius
+User/Group: jwiers/jwiers
+State: CANCELLED (exit code 0)
+Nodes: 1
+Cores per node: 16
+CPU Utilized: 00:02:53
+CPU Efficiency: 12.29% of 00:23:28 core-walltime
+Job Wall-clock time: 00:01:28
+Memory Utilized: 8.86 GB
+Memory Efficiency: 4.92% of 180.00 GB (180.00 GB/node)
+
+JOB STATISTICS
+==============
+Job ID: 11120886
+Cluster: snellius
+User/Group: jwiers/jwiers
+State: CANCELLED (exit code 0)
+Nodes: 1
+Cores per node: 16
+CPU Utilized: 00:00:43
+CPU Efficiency: 1.08% of 01:06:08 core-walltime
+Job Wall-clock time: 00:04:08
+Memory Utilized: 7.99 GB
+Memory Efficiency: 4.44% of 180.00 GB (180.00 GB/node)
+
+JOB STATISTICS
+==============
+Job ID: 11120876
+Cluster: snellius
+User/Group: jwiers/jwiers
+State: TIMEOUT (exit code 0)
+Nodes: 1
+Cores per node: 16
+CPU Utilized: 00:59:44
+CPU Efficiency: 6.18% of 16:05:52 core-walltime
+Job Wall-clock time: 01:00:22
+Memory Utilized: 8.83 GB
+Memory Efficiency: 4.91% of 180.00 GB (180.00 GB/node)
