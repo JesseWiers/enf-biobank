@@ -34,15 +34,16 @@ def get_config():
     config.recon_enf.num_hidden = 128
     config.recon_enf.num_heads = 3
     config.recon_enf.att_dim = 64
-    config.recon_enf.num_in = 3  # Images are 2D
-    config.recon_enf.num_out = 1  # 3 channels
+    config.recon_enf.num_in = 3  
+    config.recon_enf.num_out = 1  
     config.recon_enf.freq_mult = (30.0, 60.0)
     config.recon_enf.k_nearest = 4
 
-    config.recon_enf.num_latents = 128
+    config.recon_enf.num_latents = 4
     config.recon_enf.latent_dim = 64
     config.recon_enf.gaussian_window = True
-    config.recon_enf.even_sampling = False
+    config.recon_enf.even_sampling = True
+    config.recon_enf.latent_noise = True
 
     # Dataset config
     config.dataset = ml_collections.ConfigDict()
@@ -57,14 +58,14 @@ def get_config():
     config.optim.inner_lr = (0., 60., 0.) # (pose, context, window), orginally (2., 30., 0.)
     config.optim.inner_steps = 3
     
-    config.optim.first_order_maml = True
+    config.optim.first_order_maml = False
 
     # Training config
     config.train = ml_collections.ConfigDict()
     config.train.batch_size = 4
     config.train.noise_scale = 1e-1  # Noise added to latents to prevent overfitting
-    config.train.num_epochs_pretrain = 10
-    config.train.log_interval = 100
+    config.train.num_epochs_train = 10
+    config.train.log_interval = 25
     logging.getLogger().setLevel(logging.INFO)
 
     # Set checkpoint path
@@ -165,6 +166,7 @@ def main(_):
         noise_scale=config.train.noise_scale,
         z_positions=len(list(config.dataset.z_indices)),
         even_sampling=config.recon_enf.even_sampling,
+        latent_noise=config.recon_enf.latent_noise,
     )
 
     # Init the model
@@ -185,6 +187,7 @@ def main(_):
             bi_invariant_cls=TranslationBI,
             key=key,
             noise_scale=config.train.noise_scale,
+            latent_noise=config.recon_enf.latent_noise,
         )
 
         def mse_loss(z):
@@ -240,7 +243,7 @@ def main(_):
     
     # Pretraining loop for fitting the ENF backbone
     glob_step = 0
-    for epoch in range(config.train.num_epochs_pretrain):
+    for epoch in range(config.train.num_epochs_train):
         epoch_loss = []
         for i, (img, _) in enumerate(train_dloader):
                         

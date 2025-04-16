@@ -19,6 +19,8 @@ from enf.utils import create_coordinate_grid, initialize_latents
 
 from experiments.downstream_models.transformer_enf import TransformerClassifier
 
+jax.config.update("jax_default_matmul_precision", "highest")
+
 
 def get_config():
 
@@ -34,10 +36,11 @@ def get_config():
     config.recon_enf.num_hidden = 128
     config.recon_enf.num_heads = 3
     config.recon_enf.att_dim = 64
-    config.recon_enf.num_in = 2  # Images are 2D
-    config.recon_enf.num_out = 1  # 3 channels
+    config.recon_enf.num_in = 2  
+    config.recon_enf.num_out = 1  
     config.recon_enf.freq_mult = (3.0, 5.0)
     config.recon_enf.k_nearest = 4
+    config.recon_enf.latent_noise = True
 
     config.recon_enf.num_latents = 16
     config.recon_enf.latent_dim = 64
@@ -62,7 +65,7 @@ def get_config():
     config.train = ml_collections.ConfigDict()
     config.train.batch_size = 4
     config.train.noise_scale = 1e-1  # Noise added to latents to prevent overfitting
-    config.train.num_epochs_pretrain = 10
+    config.train.num_epochs_train = 10
     config.train.log_interval = 50
     logging.getLogger().setLevel(logging.INFO)
 
@@ -88,7 +91,7 @@ def plot_biobank_comparison(
         poses: Optional poses to plot on the image
         save_path: Optional path to save the figure
     """
-    fig, axes = plt.subplots(1, 3, figsize=(6, 2))
+    fig, axes = plt.subplots(1, 2, figsize=(4, 2))
     fig.suptitle('Original (top) vs Reconstruction (bottom)')
     
     # Clip to prevent warnings
@@ -104,12 +107,12 @@ def plot_biobank_comparison(
     axes[1].set_title('Reconstruction')
 
     # Plot poses
-    if poses is not None:
-        # Map to 0-W range
-        poses = (poses + 1) * original.shape[0] / 2
-        axes[2].imshow(reconstruction, cmap='gray')
-        axes[2].scatter(poses[:, 0], poses[:, 1], c='r', s=2)
-        axes[2].set_title('Poses')
+    # if poses is not None:
+    #     # Map to 0-W range
+    #     poses = (poses + 1) * original.shape[0] / 2
+    #     axes[2].imshow(reconstruction, cmap='gray')
+    #     axes[2].scatter(poses[:, 0], poses[:, 1], c='r', s=2)
+    #     axes[2].set_title('Poses')
 
     # Remove axes
     for ax in axes.flat:
@@ -161,6 +164,7 @@ def main(_):
         key=subkey,
         noise_scale=config.train.noise_scale,
         even_sampling=config.recon_enf.even_sampling,
+        latent_noise=config.recon_enf.latent_noise,
     )
 
     # Init the model
@@ -181,6 +185,7 @@ def main(_):
             bi_invariant_cls=TranslationBI,
             key=key,
             noise_scale=config.train.noise_scale,
+            latent_noise=config.recon_enf.latent_noise,
         )
 
         def mse_loss(z):
@@ -217,7 +222,7 @@ def main(_):
  
     # Pretraining loop for fitting the ENF backbone
     glob_step = 0
-    for epoch in range(config.train.num_epochs_pretrain):
+    for epoch in range(config.train.num_epochs_train):
         epoch_loss = []
         for i, (img, _) in enumerate(train_dloader):
             y = jnp.reshape(img, (img.shape[0], -1, img.shape[-1]))

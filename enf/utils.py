@@ -78,6 +78,7 @@ def initialize_latents(
     noise_scale: float = 0.1,
     z_positions: int = 2,
     even_sampling: bool = True,
+    latent_noise: bool = True,
 ) -> Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray]:
     """Initialize the latent variables based on the bi-invariant type."""
     key, subkey = jax.random.split(key)
@@ -110,7 +111,8 @@ def initialize_latents(
         raise ValueError(f"Unsupported bi-invariant type: {bi_invariant_cls}")
 
     # Add random noise to positions
-    pose = pose + jax.random.normal(subkey, pose.shape) * noise_scale / jnp.sqrt(num_latents)
+    if latent_noise:
+        pose = pose + jax.random.normal(subkey, pose.shape) * noise_scale / jnp.sqrt(num_latents)
 
     # Initialize context vectors and gaussian window
     context = jnp.ones((batch_size, num_latents, latent_dim)) / latent_dim
