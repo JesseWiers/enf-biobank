@@ -63,9 +63,14 @@ class BiobankNifti(Dataset):
                 for z in range(Z):
                     image = image_data[:, :, z, t] # Load image 
                     
-                    # Normalize per slice
+                    # Min-max normalization per slice
+                    slice_min = np.min(image)
                     slice_max = np.max(image)
-                    image = np.array(image) / slice_max
+                    
+                    image = (image - slice_min) / (slice_max - slice_min)
+                
+                    # Assert all values are between 0 and 1
+                    assert np.all(image >= 0) and np.all(image <= 1), f"Normalization failed: values outside [0,1] range for patient {patient_path}, t={t}, z={z}"
              
                     image = image[..., np.newaxis] # Add axis
                                         
@@ -144,10 +149,16 @@ class BiobankNifti3D(Dataset):
                 if len(self.z_indices) == 1:
                     for z in range(Z):
                         image = image_data[:, :, z, t]
-                        # Normalize per slice
+                        
+                        # Min-max normalization per slice
+                        slice_min = np.min(image)
                         slice_max = np.max(image)
-                        if slice_max > 0:  # Avoid division by zero
-                            image = image / slice_max
+                        
+                        image = (image - slice_min) / (slice_max - slice_min)
+                        
+                        # Assert all values are between 0 and 1
+                        assert np.all(image >= 0) and np.all(image <= 1), f"Normalization failed: values outside [0,1] range for patient {patient_path}, t={t}, z={z}"
+                        
                         image = image[..., np.newaxis]
                         image = image[np.newaxis, ...]
                         self.data.append(image)
@@ -159,9 +170,15 @@ class BiobankNifti3D(Dataset):
                         
                         # Normalize each slice separately
                         for i in range(len(self.z_indices)):
+                            # Min-max normalization
+                            slice_min = np.min(stacked_images[i])
                             slice_max = np.max(stacked_images[i])
-                            if slice_max > 0:  # Avoid division by zero
-                                stacked_images[i] = stacked_images[i] / slice_max
+                            
+                            
+                            stacked_images[i] = (stacked_images[i] - slice_min) / (slice_max - slice_min)
+                         
+                            # Assert all values are between 0 and 1
+                            assert np.all(stacked_images[i] >= 0) and np.all(stacked_images[i] <= 1), f"Normalization failed: values outside [0,1] range for patient {patient_path}, t={t}, z={self.z_indices[i]}"
 
                         # Add a channel axis: [Z_indices, H, W, 1]
                         stacked_images = stacked_images[..., np.newaxis]
