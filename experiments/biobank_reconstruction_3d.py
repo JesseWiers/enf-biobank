@@ -39,11 +39,11 @@ def get_config():
     config.recon_enf.freq_mult = (30.0, 60.0)
     config.recon_enf.k_nearest = 4
 
-    config.recon_enf.num_latents = 4
+    config.recon_enf.num_latents = 16
     config.recon_enf.latent_dim = 64
     config.recon_enf.gaussian_window = True
-    config.recon_enf.even_sampling = True
-    config.recon_enf.latent_noise = True
+    config.recon_enf.even_sampling = False
+    config.recon_enf.latent_noise = False
 
     # Dataset config
     config.dataset = ml_collections.ConfigDict()
@@ -70,7 +70,7 @@ def get_config():
 
     # Set checkpoint path
     config.run_name = "enf"
-    config.exp_name = "biobank_reconstruction"
+    config.exp_name = "test"
     return config
 
 
@@ -261,13 +261,20 @@ def main(_):
             if glob_step % config.train.log_interval == 0:
 
                 img_slices, img_r_slices = [], []
+                
+                # Reconstruct the first test sample each validation step
+                img, _ = next(iter(test_dloader))
+                y = jnp.reshape(img, (img.shape[0], -1, img.shape[-1])) 
 
                 for idx in range(len(list(config.dataset.z_indices))):
                     
                     x_slice = x[:, (idx*num_subsampled_points):((idx+1)*num_subsampled_points), :]
                     y_slice = y[:, (idx*num_subsampled_points):((idx+1)*num_subsampled_points), :]
                     
-                    # Reconstruct only the first slice (B, 1, H, W, C)
+                    # Inner Loop to obtain z
+                    key, subkey = jax.random.split(key)
+                    mse, (z) = recon_inner_loop(recon_enf_params, x_slice, y_slice, key)
+                    
                     img_r_slice = recon_enf.apply(recon_enf_params, x_slice, *z) 
                     img_r_slice = img_r_slice.reshape(img[:,:1,:,:,:].shape)
                     img_slice = y_slice.reshape(img[:,:1,:,:,:].shape)
