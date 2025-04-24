@@ -11,6 +11,13 @@ import matplotlib.pyplot as plt
 
 import wandb
 
+import os
+import pickle
+
+from flax.training import checkpoints
+import flax
+flax.training.checkpoints.CHECKPOINT_GDA = False
+
 # Custom imports
 from experiments.datasets import get_dataloaders
 from enf.model import EquivariantNeuralField
@@ -21,6 +28,42 @@ from experiments.downstream_models.transformer_enf import TransformerClassifier
 
 jax.config.update("jax_default_matmul_precision", "highest")
 
+
+def save_checkpoint(checkpoint_dir, model_params, optimizer_state, epoch, global_step, best_psnr):
+    """
+    Saves the model parameters, optimizer state, and training metadata.
+    
+    Args:
+        checkpoint_dir (str): Directory where the checkpoint will be saved.
+        model_params (PyTree): The parameters of the model to be saved.
+        optimizer_state (PyTree): The state of the optimizer.
+        epoch (int): Current epoch number.
+        global_step (int): Current training step.
+        best_psnr (float): The best PSNR value encountered so far.
+    """
+    
+    
+    # Ensure the checkpoint directory is an absolute path
+    checkpoint_dir = os.path.abspath(checkpoint_dir)
+    
+    # Ensure the checkpoint directory exists
+    os.makedirs(checkpoint_dir, exist_ok=True)
+    
+    # Construct checkpoint dictionary
+    checkpoint_data = {
+        "model_params": model_params,
+        "optimizer_state": optimizer_state,
+        "epoch": epoch,
+        "global_step": global_step,
+        "best_psnr": best_psnr,
+    }
+    
+    checkpoint_path = os.path.join(checkpoint_dir, f"checkpoint_{global_step}.pkl")
+    
+    with open(checkpoint_path, "wb") as f:
+        pickle.dump(checkpoint_data, f)
+        
+    print(f"Checkpoint saved at step {global_step} in {checkpoint_dir}")
 
 def get_config():
 
@@ -268,6 +311,7 @@ def main(_):
 
  
     # Pretraining loop for fitting the ENF backbone
+    best_psnr = float('-inf')
     glob_step = 0
     for epoch in range(config.train.num_epochs_train):
         epoch_loss = []
@@ -287,6 +331,11 @@ def main(_):
                 # Reconstruct and plot the first image in the batch
                 
                 test_psnr, test_mse, img, img_r = evaluate_test_set(recon_enf_params, test_dloader, key)
+                
+                if test_psnr > best_psnr:
+                    best_psnr = test_psnr
+                    save_checkpoint(f"checkpoints/{config.run_name}", recon_enf_params, recon_enf_opt_state, epoch, glob_step, best_psnr)
+
                 fig = plot_biobank_comparison(img[0], img_r[0], poses=z[0][0])
                 
                 wandb.log({"recon-mse": sum(epoch_loss) / len(epoch_loss), "test-mse": test_mse, "test-psnr": test_psnr, "reconstruction": fig}, step=glob_step)
