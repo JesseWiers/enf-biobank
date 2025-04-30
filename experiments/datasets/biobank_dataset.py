@@ -19,12 +19,14 @@ class BiobankNifti(Dataset):
         transform: torch.nn.Module=None,
         target_transform: torch.nn.Module=None,
         num_patients_train: int=None,
-        num_patients_test: int=None
+        num_patients_test: int=None,
+        skip_zero_seg: bool=True
     ):
         self.transform = transform
         self.target_transform = target_transform
         self.data = []
-        
+        self.data_seg = []
+        self.skip_zero_seg = skip_zero_seg
         patient_paths = os.listdir(root)
         
         patient_paths = sorted(os.listdir(root))
@@ -47,21 +49,31 @@ class BiobankNifti(Dataset):
                 
         
         for patient_path in patient_paths:
-            nifti_file_path = os.path.join(root, patient_path, "sa_cropped.nii.gz")  # Assuming file structure
+            nifti_file_path = os.path.join(root, patient_path, "sa_cropped.nii.gz") 
+            nifti_file_path_seg = os.path.join(root, patient_path, "seg_sa_cropped.nii.gz")
 
-            if not os.path.exists(nifti_file_path):
-                print(f"Skipping {patient_path}: NIFTI file not found.")
+            if not os.path.exists(nifti_file_path) and not os.path.exists(nifti_file_path_seg):
+                print(f"Skipping {patient_path}: NIFTI files not found.")
                 continue
             
             # Load the NIFTI file
             nifti_image = nib.load(nifti_file_path)
             image_data = nifti_image.get_fdata()  # Shape: [H, W, Z, T]
+                 
+            nifti_image_seg = nib.load(nifti_file_path_seg)
+            image_data_seg = nifti_image_seg.get_fdata()  # Shape: [H, W, Z, T]
+            
             H, W, Z, T = image_data.shape
             
             # Iterate over timesteps
             for t in range(T):
                 for z in range(Z):
                     image = image_data[:, :, z, t] # Load image 
+                    image_seg = image_data_seg[:, :, z, t] # Load segmentation
+                    
+                    # if image_seg is all zeros, skip
+                    if np.all(image_seg == 0) and self.skip_zero_seg:
+                        continue
                     
                     # Min-max normalization per slice
                     slice_min = np.min(image)
@@ -75,13 +87,14 @@ class BiobankNifti(Dataset):
                     image = image[..., np.newaxis] # Add axis
                                         
                     self.data.append(image)
+                    self.data_seg.append(image_seg)
 
         print(f"Number of datapoints: {len(self.data)}")
                 
 
     def __getitem__(self, index: int):
         """Returns a tuple of (data, target) for the given index"""
-        return self.data[index], self.data[index]
+        return self.data[index], self.data_seg[index]
 
     def __len__(self):
         return len(self.data)

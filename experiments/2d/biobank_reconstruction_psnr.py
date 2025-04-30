@@ -64,6 +64,27 @@ def save_checkpoint(checkpoint_dir, model_params, optimizer_state, epoch, global
         pickle.dump(checkpoint_data, f)
         
     print(f"Checkpoint saved at step {global_step} in {checkpoint_dir}")
+    
+    
+def load_checkpoint(checkpoint_path):
+    """
+    Loads a checkpoint from a .pkl file.
+    """
+    if not os.path.exists(checkpoint_path):
+        raise FileNotFoundError(f"Checkpoint not found: {checkpoint_path}")
+
+    with open(checkpoint_path, "rb") as f:
+        checkpoint_data = pickle.load(f)
+
+    print(f"Checkpoint loaded from {checkpoint_path}")
+    
+    return (
+        checkpoint_data["model_params"],
+        checkpoint_data["optimizer_state"],
+        checkpoint_data["epoch"],
+        checkpoint_data["global_step"],
+        checkpoint_data["best_psnr"],
+    )
 
 def get_config():
 
@@ -309,6 +330,19 @@ def main(_):
         # Return first batch for visualization
         return avg_psnr, avg_mse, originals[0], reconstructions[0]
 
+
+    checkpoint_path = "/home/jwiers/deeprisk/new_codebase/enf-biobank/checkpoints/recon_phase/checkpoint_3200.pkl"
+    
+    if os.path.exists(checkpoint_path):
+        print(f"\033[93mResuming training from checkpoint: {checkpoint_path}\033[0m")
+        recon_enf_params, recon_enf_opt_state, start_epoch, glob_step, best_psnr = load_checkpoint(checkpoint_path)
+        
+        logging.info(f"Starting epoch: {start_epoch}")
+        logging.info(f"Global step: {glob_step}")
+        logging.info(f"Best PSNR: {best_psnr}")
+    else:
+        print("\033[91mNo checkpoint found. Starting training from scratch.\033[0m")
+    
  
     # Pretraining loop for fitting the ENF backbone
     best_psnr = float('-inf')
