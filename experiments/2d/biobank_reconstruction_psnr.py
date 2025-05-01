@@ -330,18 +330,18 @@ def main(_):
         # Return first batch for visualization
         return avg_psnr, avg_mse, originals[0], reconstructions[0]
 
-
-    checkpoint_path = "/home/jwiers/deeprisk/new_codebase/enf-biobank/checkpoints/recon_phase/checkpoint_3200.pkl"
+    # TODO: This should be provided as an arg in the config file / command line
+    checkpoint_path = ""
     
     if os.path.exists(checkpoint_path):
-        print(f"\033[93mResuming training from checkpoint: {checkpoint_path}\033[0m")
+        logging.info(f"\033[93mResuming training from checkpoint: {checkpoint_path}\033[0m")
         recon_enf_params, recon_enf_opt_state, start_epoch, glob_step, best_psnr = load_checkpoint(checkpoint_path)
         
         logging.info(f"Starting epoch: {start_epoch}")
         logging.info(f"Global step: {glob_step}")
         logging.info(f"Best PSNR: {best_psnr}")
     else:
-        print("\033[91mNo checkpoint found. Starting training from scratch.\033[0m")
+        logging.info("\033[91mNo checkpoint found. Starting training from scratch.\033[0m")
     
  
     # Pretraining loop for fitting the ENF backbone
@@ -372,7 +372,13 @@ def main(_):
 
                 fig = plot_biobank_comparison(img[0], img_r[0], poses=z[0][0])
                 
-                wandb.log({"recon-mse": sum(epoch_loss) / len(epoch_loss), "test-mse": test_mse, "test-psnr": test_psnr, "reconstruction": fig}, step=glob_step)
+                wandb.log({
+                    "recon-mse": sum(epoch_loss) / len(epoch_loss), 
+                    "test-mse": test_mse, 
+                    "test-psnr": test_psnr, 
+                    "reconstruction": fig,
+                    "epoch": epoch
+                }, step=glob_step)
                 plt.close('all')
                 logging.info(f"RECON ep {epoch} / step {glob_step} || mse: {sum(epoch_loss[-10:]) / len(epoch_loss[-10:])} || test-mse: {test_mse} || test-psnr: {test_psnr}")
 

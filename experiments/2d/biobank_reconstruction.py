@@ -32,21 +32,21 @@ def get_config():
     config.exp_name = "test"
 
     # Reconstruction model
-    config.recon_enf = ml_collections.ConfigDict()
-    config.recon_enf.num_hidden = 128
-    config.recon_enf.num_heads = 3
-    config.recon_enf.att_dim = 64
-    config.recon_enf.num_in = 2  
-    config.recon_enf.num_out = 1  
-    config.recon_enf.freq_mult = (3.0, 5.0)
-    config.recon_enf.k_nearest = 4
-    config.recon_enf.latent_noise = True
+    config.enf = ml_collections.ConfigDict()
+    config.enf.num_hidden = 128
+    config.enf.num_heads = 3
+    config.enf.att_dim = 64
+    config.enf.num_in = 2  
+    config.enf.num_out = 1  
+    config.enf.freq_mult = (3.0, 5.0)
+    config.enf.k_nearest = 4
+    config.enf.latent_noise = True
 
-    config.recon_enf.num_latents = 16
-    config.recon_enf.latent_dim = 64
+    config.enf.num_latents = 16
+    config.enf.latent_dim = 64
     
-    config.recon_enf.even_sampling = True
-    config.recon_enf.gaussian_window = True
+    config.enf.even_sampling = True
+    config.enf.gaussian_window = True
 
     # Dataset config
     config.dataset = ml_collections.ConfigDict()
@@ -142,58 +142,59 @@ def main(_):
     x = create_coordinate_grid(batch_size=config.train.batch_size, img_shape=img_shape)
 
     # Define the reconstruction and segmentation models
-    recon_enf = EquivariantNeuralField(
-        num_hidden=config.recon_enf.num_hidden,
-        att_dim=config.recon_enf.att_dim,
-        num_heads=config.recon_enf.num_heads,
-        num_out=config.recon_enf.num_out,
-        emb_freq=config.recon_enf.freq_mult,
-        nearest_k=config.recon_enf.k_nearest,
+    enf = EquivariantNeuralField(
+        num_hidden=config.enf.num_hidden,
+        att_dim=config.enf.att_dim,
+        num_heads=config.enf.num_heads,
+        num_out=config.enf.num_out,
+        emb_freq=config.enf.freq_mult,
+        nearest_k=config.enf.k_nearest,
         bi_invariant=TranslationBI(),
-        gaussian_window=config.recon_enf.gaussian_window,
+        gaussian_window=config.enf.gaussian_window,
     )
 
     # Create dummy latents for model init
     key, subkey = jax.random.split(key)
     temp_z = initialize_latents(
         batch_size=1,  # Only need one example for initialization
-        num_latents=config.recon_enf.num_latents,
-        latent_dim=config.recon_enf.latent_dim,
-        data_dim=config.recon_enf.num_in,
+        num_latents=config.enf.num_latents,
+        latent_dim=config.enf.latent_dim,
+        data_dim=config.enf.num_in,
         bi_invariant_cls=TranslationBI,
         key=subkey,
         noise_scale=config.train.noise_scale,
-        even_sampling=config.recon_enf.even_sampling,
-        latent_noise=config.recon_enf.latent_noise,
+        even_sampling=config.enf.even_sampling,
+        latent_noise=config.enf.latent_noise,
     )
 
     # Init the model
-    recon_enf_params = recon_enf.init(key, x, *temp_z)
+    enf_params = enf.init(key, x, *temp_z)
 
     # Define optimizer for the ENF backbone
     enf_opt = optax.adam(learning_rate=config.optim.lr_enf)
-    recon_enf_opt_state = enf_opt.init(recon_enf_params)
+    enf_opt_state = enf_opt.init(enf_params)
 
 
     @jax.jit
     def recon_inner_loop(enf_params, coords, img, key):
         z = initialize_latents(
             batch_size=config.train.batch_size,
-            num_latents=config.recon_enf.num_latents,
-            latent_dim=config.recon_enf.latent_dim,
-            data_dim=config.recon_enf.num_in,
+            num_latents=config.enf.num_latents,
+            latent_dim=config.enf.latent_dim,
+            data_dim=config.enf.num_in,
             bi_invariant_cls=TranslationBI,
             key=key,
             noise_scale=config.train.noise_scale,
-            latent_noise=config.recon_enf.latent_noise,
+            latent_noise=config.enf.latent_noise,
         )
 
         def mse_loss(z):
-            out = recon_enf.apply(enf_params, coords, *z)
+            out = enf.apply(enf_params, coords, *z)
             return jnp.sum(jnp.mean((out - img) ** 2, axis=(1, 2)), axis=0)
 
         def inner_step(z, _):
             _, grads = jax.value_and_grad(mse_loss)(z)
+            
             # Gradient descent update
             z = jax.tree.map(lambda z, grad, lr: z - lr * grad, z, grads, config.optim.inner_lr)
             return z, None
@@ -204,6 +205,7 @@ def main(_):
         # Stop gradient if first order MAML
         if config.optim.first_order_maml:
             z = jax.lax.stop_gradient(z)
+            
         return mse_loss(z), z
 
     @jax.jit
@@ -228,15 +230,15 @@ def main(_):
             y = jnp.reshape(img, (img.shape[0], -1, img.shape[-1]))
 
             # Perform outer loop optimization
-            (loss, z), recon_enf_params, recon_enf_opt_state, key = recon_outer_step(
-                x, y, recon_enf_params, recon_enf_opt_state, key)
+            (loss, z), enf_params, enf_opt_state, key = recon_outer_step(
+                x, y, enf_params, enf_opt_state, key)
 
             epoch_loss.append(loss)
             glob_step += 1
 
             if glob_step % config.train.log_interval == 0:
                 # Reconstruct and plot the first image in the batch
-                img_r = recon_enf.apply(recon_enf_params, x, *z).reshape(img.shape)
+                img_r = enf.apply(enf_params, x, *z).reshape(img.shape)
                 fig = plot_biobank_comparison(img[0], img_r[0], poses=z[0][0])
                 wandb.log({"recon-mse": sum(epoch_loss) / len(epoch_loss), "reconstruction": fig}, step=glob_step)
                 plt.close('all')

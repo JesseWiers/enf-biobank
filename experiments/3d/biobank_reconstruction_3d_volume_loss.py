@@ -276,7 +276,7 @@ def main(_):
                 img_slice = img[:, (i*num_subsampled_points):((i+1)*num_subsampled_points), :]
                 
                 out = recon_enf.apply(enf_params, coords_slice, *z)
-                mse = jnp.mean((img_slice - out) ** 2, axis=1) 
+                mse = jnp.mean((img_slice - out) ** 2) 
                 
                 psnr_slice = 20 * jnp.log10(max_pixel_value / jnp.sqrt(mse))
                 psnr_slices.append(psnr_slice)  

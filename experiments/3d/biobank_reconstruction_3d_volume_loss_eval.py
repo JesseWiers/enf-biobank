@@ -199,9 +199,6 @@ def main(_):
 
         def mse_loss(z):
             
-            # NOTE: Concatenate losses for all coords and take average 
-            # NOTE: New function, complete_volume
-            
             out = recon_enf.apply(enf_params, coords, *z)
             return jnp.sum(jnp.mean((out - img) ** 2, axis=(1, 2)), axis=0)
         

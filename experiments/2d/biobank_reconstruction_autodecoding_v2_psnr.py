@@ -8,7 +8,7 @@ import optax
 import logging
 from tqdm import tqdm
 import matplotlib.pyplot as plt
-
+import time
 import wandb
 
 # Custom imports
@@ -172,16 +172,60 @@ def main(_):
     recon_enf_opt_state = enf_opt.init(recon_enf_params)
 
 
+    # @jax.jit
+    # def recon_inner_loop(enf_params, coords, img, key):
+    #     z = initialize_latents(
+    #         batch_size=config.train.batch_size,
+    #         num_latents=config.recon_enf.num_latents,
+    #         latent_dim=config.recon_enf.latent_dim,
+    #         data_dim=config.recon_enf.num_in,
+    #         bi_invariant_cls=TranslationBI,
+    #         key=key,
+    #         noise_scale=config.train.noise_scale,
+    #         latent_noise=config.recon_enf.latent_noise,
+    #     )
+
+    #     def mse_loss(z):
+    #         out = recon_enf.apply(enf_params, coords, *z)
+    #         return jnp.sum(jnp.mean((out - img) ** 2, axis=(1, 2)), axis=0)
+
+    #     def inner_step(z, _):
+    #         _, grads = jax.value_and_grad(mse_loss)(z)
+    #         # Gradient descent update
+    #         z = jax.tree.map(lambda z, grad, lr: z - lr * grad, z, grads, config.optim.inner_lr)
+    #         return z, None
+        
+    #     # Perform inner loop optimization
+    #     z, _ = jax.lax.scan(inner_step, z, None, length=config.optim.inner_steps)
+
+    #     # Stop gradient if first order MAML
+    #     if config.optim.first_order_maml:
+    #         z = jax.lax.stop_gradient(z)
+    #     return mse_loss(z), z
+
+    # @jax.jit
+    # def recon_outer_step(coords, img, enf_params, enf_opt_state, key):
+    #     # Perform inner loop optimization
+    #     key, subkey = jax.random.split(key)
+    #     (loss, z), grads = jax.value_and_grad(recon_inner_loop, has_aux=True)(enf_params, coords, img, key)
+
+    #     # Update the ENF backbone
+    #     enf_grads, enf_opt_state = enf_opt.update(grads, enf_opt_state)
+    #     enf_params = optax.apply_updates(enf_params, enf_grads)
+
+    #     # Sample new key
+    #     return (loss, z), enf_params, enf_opt_state, subkey
 
 
 
     @jax.jit
     def train_step(coords, img, z, enf_params, enf_opt_state, key):
 
+        # Both inputs are required here in order to compute the gradients 
         def mse_loss(z, enf_params):  
             out = recon_enf.apply(enf_params, coords, *z)  
             return jnp.sum(jnp.mean((out - img) ** 2, axis=(1, 2)), axis=0)
-
+        
         key, subkey = jax.random.split(key)
         loss, (z_grads, enf_grads) = jax.value_and_grad(mse_loss, argnums=(0, 1))(z, enf_params)
                 
@@ -189,64 +233,84 @@ def main(_):
         
         enf_grads, enf_opt_state = enf_opt.update(enf_grads, enf_opt_state)
         enf_params = optax.apply_updates(enf_params, enf_grads)
-                
+                  
         # Sample new key
         return (loss, z), enf_params, enf_opt_state, subkey
-
- 
+    
+    def psnr(enf_params, x, y, z):
+        
+        out = recon_enf.apply(enf_params, x, *z)
+        mse = jnp.mean((y - out) ** 2, axis=1) 
+        
+        max_pixel_value = 1.0 
+        psnr = 20 * jnp.log10(max_pixel_value / jnp.sqrt(mse))
+        
+        return jnp.mean(psnr)
+    
+        
     # Training loop for fitting the ENF backbone
-
     num_samples = len(train_dloader) * config.train.batch_size
     logging.info(f"Initializing latens for {num_samples} samples")
        
-    glob_step = 0
-    z_dataset = []
-
-    for epoch in range(config.train.num_epochs_train):
-
-        epoch_loss = []
-
-        for i, (img, _) in tqdm(enumerate(train_dloader), total=len(train_dloader), desc=f"Epoch {epoch}"):
-            
-            if epoch==0: 
-                z = initialize_latents(
-                    batch_size=config.train.batch_size,
+    z_dataset = initialize_latents(
+                    batch_size=num_samples,
                     num_latents=config.recon_enf.num_latents,
                     latent_dim=config.recon_enf.latent_dim,
                     data_dim=config.recon_enf.num_in,
                     bi_invariant_cls=TranslationBI,
                     key=key,  
                 )
-                
-                y = jnp.reshape(img, (img.shape[0], -1, img.shape[-1]))
-        
-                (loss, z), recon_enf_params, recon_enf_opt_state, key = train_step(
-                    x, y, z, recon_enf_params, recon_enf_opt_state, key)
-                
-                z_dataset.append(z)
-            else: 
-                z = z_dataset[i]
-                
-                y = jnp.reshape(img, (img.shape[0], -1, img.shape[-1]))
 
-                # Train step 
-                (loss, z), recon_enf_params, recon_enf_opt_state, key = train_step(
-                    x, y, z, recon_enf_params, recon_enf_opt_state, key)
-                
-                z_dataset[i] = z
-                
+    glob_step = 0
+    
+    for epoch in range(config.train.num_epochs_train):
+        
+        # time the epoch
+        start_time = time.time()
+
+        epoch_loss = []
+        epoch_psnr = []
+        
+        for i, (img, _) in enumerate(train_dloader):
+            
+            y = jnp.reshape(img, (img.shape[0], -1, img.shape[-1]))
+            
+            # Extract latents corresponding to batch 
+            z = jax.tree.map(lambda x: x[i*config.train.batch_size:(i+1)*config.train.batch_size], z_dataset)
+        
+            (loss, z), recon_enf_params, recon_enf_opt_state, key = train_step(
+                x, y, z, recon_enf_params, recon_enf_opt_state, key)
+            psnr_value = psnr(recon_enf_params, x, y, z)
+            
             epoch_loss.append(loss)
+            epoch_psnr.append(psnr_value)
+        
+            # Update dataset with new latents 
+            z_dataset = jax.tree.map(lambda full, partial: full.at[i*config.train.batch_size:(i+1)*config.train.batch_size].set(partial), z_dataset, z)
+
             glob_step += 1
                 
         img, _ = next(iter(train_dloader))
-        z = z_dataset[0]
+    
+        # Take z corresponding to first batch 
+        z = jax.tree.map(lambda x: x[:config.train.batch_size], z_dataset)
 
         img_r = recon_enf.apply(recon_enf_params, x, *z).reshape(img.shape)
+        
+        
         fig = plot_biobank_comparison(img[0], img_r[0], poses=z[0][0])
         
-        logging.info(f"RECON ep {epoch} / step {glob_step} || mse: {sum(epoch_loss) / len(epoch_loss)}")
-        wandb.log({"recon-mse": sum(epoch_loss) / len(epoch_loss), "reconstruction": fig}, step=glob_step)
+        # log epoch loss and epoch psnr
+        logging.info(f"RECON ep {epoch} / step {glob_step} || mse: {sum(epoch_loss) / len(epoch_loss)} || psnr: {sum(epoch_psnr) / len(epoch_psnr)}")
+        
+        # log time
+        logging.info(f"Epoch {epoch} took {time.time() - start_time} seconds")
+        
+        # log to wandb
+        wandb.log({"recon-mse": sum(epoch_loss) / len(epoch_loss), "recon-psnr": sum(epoch_psnr) / len(epoch_psnr), "reconstruction": fig, "epoch": epoch}, step=glob_step)
         plt.close('all')
+        
+        
 
    
     run.finish()

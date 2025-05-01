@@ -36,7 +36,7 @@ def numpy_collate(batch: list[np.ndarray]) -> np.ndarray:
         return np.array(batch)
 
 
-def get_dataloaders(dataset_name: str, batch_size: int, num_workers: int, num_train: int, num_test: int, seed: int, z_indices:list[int] = [0,1]):
+def get_dataloaders(dataset_name: str, batch_size: int, num_workers: int, num_train: int, num_test: int, seed: int, z_indices:list[int] = [0,1], shuffle_train: bool = True):
     """ 
     Returns specified dataset dataloaders.
 
@@ -73,7 +73,7 @@ def get_dataloaders(dataset_name: str, batch_size: int, num_workers: int, num_tr
     train_loader = torch.utils.data.DataLoader(
         dataset=train_dset,
         batch_size=batch_size,
-        shuffle=True,
+        shuffle=shuffle_train,
         collate_fn=numpy_collate,
         drop_last=True,
         num_workers=num_workers,
