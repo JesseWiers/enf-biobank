@@ -34,7 +34,7 @@ class EquivariantNeuralField(nn.Module):
     emb_freq: Tuple[float, float]
     nearest_k: int
     bi_invariant: Callable
-    gaussian_window: bool
+    gaussian_window: bool=True
     
 
     def setup(self):

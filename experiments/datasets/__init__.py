@@ -5,8 +5,7 @@ import numpy as np
 
 from experiments.datasets.ombria_dataset import Ombria
 from torchvision.datasets import CIFAR10
-from experiments.datasets.biobank_dataset import BiobankNifti, BiobankNifti3D
-
+from experiments.datasets.biobank_dataset import BiobankNifti, BiobankNifti3D, BiobankNiftiV2
 
 def image_to_numpy(image: Image) -> np.ndarray:
     """
@@ -62,6 +61,10 @@ def get_dataloaders(dataset_name: str, batch_size: int, num_workers: int, num_tr
         transforms = torchvision.transforms.Compose([image_to_numpy])
         train_dset = BiobankNifti(root='/home/jwiers/deeprisk/ukbb_cardiac/datasets/n=1200', split="train", transform=transforms, num_patients_train=num_train)
         test_dset = BiobankNifti(root='/home/jwiers/deeprisk/ukbb_cardiac/datasets/n=1200', split="test", transform=transforms, num_patients_test=num_test)
+    elif dataset_name == "2d_biobank_v2":
+        transforms = torchvision.transforms.Compose([image_to_numpy])
+        train_dset = BiobankNiftiV2(root='/projects/prjs1252/data_jesse/cmr_cropped', split="train", transform=transforms, num_patients_train=num_train)
+        test_dset = BiobankNiftiV2(root='/projects/prjs1252/data_jesse/cmr_cropped', split="test", transform=transforms, num_patients_test=num_test)
     elif dataset_name == "3d_biobank":
         transforms = torchvision.transforms.Compose([image_to_numpy])
         train_dset = BiobankNifti3D(root='/home/jwiers/deeprisk/ukbb_cardiac/datasets/n=1200', split="train", transform=transforms, num_patients_train=num_train, z_indices=z_indices)

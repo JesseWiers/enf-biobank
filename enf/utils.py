@@ -88,10 +88,8 @@ def initialize_latents(
         
         if even_sampling:
             pose = initialize_grid_positions(batch_size, num_latents, data_dim)
-            print("using even grid positions")
         else:
             pose = initialize_uneven_grid_positions(batch_size, num_latents, z_positions=z_positions)
-            print("using uneven grid positions")
         
     elif bi_invariant_cls == RotoTranslationBI2D:
         if data_dim != 2:
