@@ -138,3 +138,34 @@ class TransformerForecaster(nn.Module):
             return p_0 + p, c_0 + c, g_0
         else:
             return p_0, c_0 + c, g_0
+
+class TransformerRegressor(nn.Module):
+    """
+    Transformer model for regression tasks.
+    """
+    hidden_size: int
+    depth: int
+    num_heads: int
+    mlp_ratio: float
+    output_dim: int = 1  
+
+    @nn.compact
+    def __call__(self, p_0, c_0, g_0):
+        # Embed positions and context
+        pos_embed = PosEmb(self.hidden_size, freq=1.0)(p_0)
+        c = nn.Dense(self.hidden_size, kernel_init=nn.initializers.xavier_uniform())(c_0)
+        c = c + pos_embed
+
+        # Run transformer blocks
+        for _ in range(self.depth):
+            c = TransformerBlock(self.hidden_size, self.num_heads, self.mlp_ratio)(c)
+
+        # Global average pooling
+        c = jnp.mean(c, axis=1)
+        
+        # Final layer for regression 
+        return nn.Dense(
+            self.output_dim,
+            kernel_init=nn.initializers.xavier_uniform(),
+            name="regression_head"
+        )(c)

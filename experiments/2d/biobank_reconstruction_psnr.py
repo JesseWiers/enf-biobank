@@ -239,8 +239,23 @@ def main(_):
     recon_enf_opt_state = enf_opt.init(recon_enf_params)
 
 
+    z_extra_test = initialize_latents(
+            batch_size=config.train.batch_size,
+            num_latents=config.recon_enf.num_latents,
+            latent_dim=config.recon_enf.latent_dim,
+            data_dim=config.recon_enf.num_in,
+            bi_invariant_cls=TranslationBI,
+            key=key,
+            noise_scale=config.train.noise_scale,
+            latent_noise=config.recon_enf.latent_noise,
+        )
+
+    print("done")
+
+
     @jax.jit
     def recon_inner_loop(enf_params, coords, img, key):
+
         z = initialize_latents(
             batch_size=config.train.batch_size,
             num_latents=config.recon_enf.num_latents,
@@ -314,6 +329,8 @@ def main(_):
             # Get new key
             key, subkey = jax.random.split(key)
             
+            
+            # NOTE: Does this construct a z for each batch element? (Likely right?)
             mse, (z, psnr_value) = recon_inner_loop(enf_params, x, y, key)
             
             psnrs.append(psnr_value)

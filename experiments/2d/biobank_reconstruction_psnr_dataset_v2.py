@@ -197,7 +197,7 @@ def main(_):
     # Load dataset, get sample image, create corresponding coordinates
     train_dloader, test_dloader = get_dataloaders('2d_biobank_v2', config.train.batch_size, config.dataset.num_workers, num_train=config.dataset.num_patients_train, num_test=config.dataset.num_patients_test, seed=config.seed)
     sample_img, _ = next(iter(train_dloader))
-    img_shape = sample_img.shape[1:] # Image shape : (128, 160) : 20 480 datapoints
+    img_shape = sample_img.shape[1:]  
 
     # Random key
     key = jax.random.PRNGKey(55)

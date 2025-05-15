@@ -7,6 +7,7 @@ from experiments.datasets.ombria_dataset import Ombria
 from torchvision.datasets import CIFAR10
 from experiments.datasets.biobank_dataset import BiobankNifti, BiobankNifti3D, BiobankNiftiV2
 
+
 def image_to_numpy(image: Image) -> np.ndarray:
     """
     Convert a PIL image to a numpy array.
@@ -84,6 +85,7 @@ def get_dataloaders(dataset_name: str, batch_size: int, num_workers: int, num_tr
         worker_init_fn=lambda worker_id: np.random.seed(seed + worker_id)  # Seed workers
     )
     
+    
     test_loader = torch.utils.data.DataLoader(
         dataset=test_dset,
         batch_size=batch_size,
@@ -94,5 +96,6 @@ def get_dataloaders(dataset_name: str, batch_size: int, num_workers: int, num_tr
         generator=generator,  # Add generator for reproducible shuffling
         worker_init_fn=lambda worker_id: np.random.seed(seed + worker_id)  # Seed workers
     )
+
     return train_loader, test_loader
 
