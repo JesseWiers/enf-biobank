@@ -5,8 +5,11 @@ import numpy as np
 
 from experiments.datasets.ombria_dataset import Ombria
 from torchvision.datasets import CIFAR10
-from experiments.datasets.biobank_dataset import BiobankNifti, BiobankNifti3D, BiobankNiftiV2
-
+from experiments.datasets.biobank_dataset import BiobankNifti, BiobankNifti3D, BiobankNiftiV2, BiobankNifti3DV2, BiobankNiftiLVEF, BiobankNiftiLVEF3D, BiobankNiftiLVEF4D
+from experiments.datasets.biobank_dataset_endpoint_images import ImageEndpointDataset
+from experiments.datasets.autodecoding.biobank_multimodal_endpoint_dataset import EndpointDatasetMultiModal
+from experiments.datasets.autodecoding.biobank_endpoint_dataset import EndpointDataset
+from experiments.datasets.autodecoding.biobank_endpoint_dataset_specific import EndpointDatasetSpecific
 
 def image_to_numpy(image: Image) -> np.ndarray:
     """
@@ -36,7 +39,8 @@ def numpy_collate(batch: list[np.ndarray]) -> np.ndarray:
         return np.array(batch)
 
 
-def get_dataloaders(dataset_name: str, batch_size: int, num_workers: int, num_train: int, num_test: int, seed: int, z_indices:list[int] = [0,1], shuffle_train: bool = True):
+def  get_dataloaders(dataset_name: str, batch_size: int, num_workers: int, num_train: int, num_test: int, seed: int, z_indices:list[int] = [0,1], t_indices:list[int] = [0,1],  shuffle_train: bool = True, 
+                     mosaic_augment: bool = False, num_patients: int = None, endpoint_name: str = None):
     """ 
     Returns specified dataset dataloaders.
 
@@ -64,15 +68,42 @@ def get_dataloaders(dataset_name: str, batch_size: int, num_workers: int, num_tr
         test_dset = BiobankNifti(root='/home/jwiers/deeprisk/ukbb_cardiac/datasets/n=1200', split="test", transform=transforms, num_patients_test=num_test)
     elif dataset_name == "2d_biobank_v2":
         transforms = torchvision.transforms.Compose([image_to_numpy])
-        train_dset = BiobankNiftiV2(root='/projects/prjs1252/data_jesse/cmr_cropped', split="train", transform=transforms, num_patients_train=num_train)
-        test_dset = BiobankNiftiV2(root='/projects/prjs1252/data_jesse/cmr_cropped', split="test", transform=transforms, num_patients_test=num_test)
+        train_dset = BiobankNiftiV2(root='/projects/prjs1252/data_jesse/cmr_cropped', split="train", transform=transforms, num_patients_train=num_train, mosaic_augment=True)
+        test_dset = BiobankNiftiV2(root='/projects/prjs1252/data_jesse/cmr_cropped', split="test", transform=transforms, num_patients_test=num_test, mosaic_augment=True)
+    elif dataset_name == "biobank_lvef":
+        transforms = torchvision.transforms.Compose([image_to_numpy])
+        train_dset = BiobankNiftiLVEF(root='/projects/prjs1252/data_jesse_v2/nifti_dataset_cropped', split="train", transform=transforms, num_patients_train=num_train)
+        test_dset = BiobankNiftiLVEF(root='/projects/prjs1252/data_jesse_v2/nifti_dataset_cropped', split="test", transform=transforms, num_patients_test=num_test)
+    elif dataset_name == "biobank_lvef_3d":
+        transforms = torchvision.transforms.Compose([image_to_numpy])
+        train_dset = BiobankNiftiLVEF3D(root='/projects/prjs1252/data_jesse_v2/nifti_dataset_cropped', split="train", transform=transforms, num_patients_train=num_train, z_indices=z_indices)
+        test_dset = BiobankNiftiLVEF3D(root='/projects/prjs1252/data_jesse_v2/nifti_dataset_cropped', split="test", transform=transforms, num_patients_test=num_test, z_indices=z_indices)
+    elif dataset_name == "biobank_lvef_4d":
+        transforms = torchvision.transforms.Compose([image_to_numpy])
+        train_dset = BiobankNiftiLVEF4D(root='/projects/prjs1252/data_jesse_v2/nifti_dataset_cropped', split="train", transform=transforms, num_patients_train=num_train, z_indices=z_indices, t_indices=t_indices)
+        test_dset = BiobankNiftiLVEF4D(root='/projects/prjs1252/data_jesse_v2/nifti_dataset_cropped', split="test", transform=transforms, num_patients_test=num_test, z_indices=z_indices, t_indices=t_indices)
     elif dataset_name == "3d_biobank":
         transforms = torchvision.transforms.Compose([image_to_numpy])
         train_dset = BiobankNifti3D(root='/home/jwiers/deeprisk/ukbb_cardiac/datasets/n=1200', split="train", transform=transforms, num_patients_train=num_train, z_indices=z_indices)
         test_dset = BiobankNifti3D(root='/home/jwiers/deeprisk/ukbb_cardiac/datasets/n=1200', split="test", transform=transforms, num_patients_test=num_test, z_indices=z_indices)
+    elif dataset_name == "3d_biobank_v2":
+        transforms = torchvision.transforms.Compose([image_to_numpy])
+        train_dset = BiobankNifti3DV2(root='/projects/prjs1252/data_jesse/cmr_cropped', split="train", transform=transforms, num_patients_train=num_train, z_indices=z_indices)
+        test_dset = BiobankNifti3DV2(root='/projects/prjs1252/data_jesse/cmr_cropped', split="test", transform=transforms, num_patients_test=num_test, z_indices=z_indices)
+    elif dataset_name == "multi_modal":
+        transforms = torchvision.transforms.Compose([image_to_numpy])
+        train_dset = EndpointDatasetMultiModal(root='/projects/prjs1252/data_jesse_final_v3/nifti_dataset', ecg_path='/projects/prjs1252/data_jesse_final_v3/ECGs_median_leads.pth', num_patients=num_patients, z_indices=z_indices, t_indices=t_indices)
+        test_dset = EndpointDatasetMultiModal(root='/projects/prjs1252/data_jesse_final_v3/nifti_dataset', ecg_path='/projects/prjs1252/data_jesse_final_v3/ECGs_median_leads.pth', num_patients=num_patients, z_indices=z_indices, t_indices=t_indices)
+    elif dataset_name == "endpoints_4d":
+        transforms = torchvision.transforms.Compose([image_to_numpy])
+        train_dset = EndpointDataset(root='/projects/prjs1252/data_jesse_v2/nifti_dataset_cropped', split="train", transform=transforms, num_patients_train=num_train, z_indices=z_indices, t_indices=t_indices)
+        test_dset = EndpointDataset(root='/projects/prjs1252/data_jesse_v2/nifti_dataset_cropped', split="test", transform=transforms, num_patients_test=num_test, z_indices=z_indices, t_indices=t_indices)
+    elif dataset_name == "endpoints_4d_specific":
+        transforms = torchvision.transforms.Compose([image_to_numpy])
+        train_dset = EndpointDatasetSpecific(root='/projects/prjs1252/data_jesse_v2/nifti_dataset_cropped', endpoint_name=endpoint_name, transform=transforms, num_patients_train=num_train, z_indices=z_indices, t_indices=t_indices)
+        test_dset = EndpointDatasetSpecific(root='/projects/prjs1252/data_jesse_v2/nifti_dataset_cropped', endpoint_name=endpoint_name, transform=transforms, num_patients_test=num_test, z_indices=z_indices, t_indices=t_indices)
     else: 
-        raise NotImplementedError("Moving MNIST dataset not implemented yet.")
-    
+        raise NotImplementedError("Dataset not implemented yet.")
     
     train_loader = torch.utils.data.DataLoader(
         dataset=train_dset,

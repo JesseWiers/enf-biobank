@@ -300,7 +300,7 @@ def main(_):
             
             y = jnp.reshape(img, (img.shape[0], -1, img.shape[-1]))
             
-            # Extract latents corresponding to batch (NOTE: MIGHT BE QUITE INEFFICIENT TO GO OVER ALL LATENTS)
+            # Extract latents corresponding to batch 
             z = jax.tree.map(lambda x: x[i*config.train.batch_size:(i+1)*config.train.batch_size], z_dataset)
         
             (loss, z), recon_enf_params, recon_enf_opt_state, key = train_step(

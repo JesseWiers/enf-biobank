@@ -28,6 +28,8 @@ from enf.model import EquivariantNeuralField
 from enf.bi_invariants import TranslationBI
 from enf.utils import create_coordinate_grid, initialize_latents
 
+from tqdm import tqdm
+
 from experiments.downstream_models.transformer_enf import TransformerClassifier
 
 jax.config.update("jax_default_matmul_precision", "highest")
@@ -97,7 +99,7 @@ def get_config():
     
     config.dataset = ml_collections.ConfigDict()
     config.dataset.root = "/projects/prjs1252/data_jesse/cmr_cropped"
-    config.dataset.output_dir = ""
+    config.dataset.latent_dataset_path = "/projects/prjs1252/data_jesse/latent_dataset_4d.h5"
 
     logging.getLogger().setLevel(logging.INFO)
 
@@ -118,7 +120,7 @@ def main(_):
     
     for patient_path in patient_paths:
 
-        nifti_file_path = os.path.join(config.dataset.root, patient_path, "sa.nii.gz")
+        nifti_file_path = os.path.join(config.dataset.root, patient_path, "cropped_sa.nii.gz")
         
         nifti_image = nib.load(nifti_file_path)
         image_data = nifti_image.get_fdata()  # Shape: [H, W, Z, T]
@@ -232,7 +234,6 @@ def main(_):
         return mse_loss(z), (z, psnr_value)
 
     # config.recon_enf.checkpoint_path = '/home/jwiers/deeprisk/new_codebase/enf-biobank/checkpoints/train_4500_test_20_latents_64_16_batchsize_1/checkpoint_167400.pkl'
-    # config.recon_enf.checkpoint_path = ''
     
     if os.path.exists(config.recon_enf.checkpoint_path):
         logging.info(f"\033[93mResuming training from checkpoint: {config.recon_enf.checkpoint_path}\033[0m")
@@ -244,11 +245,11 @@ def main(_):
     else:
         logging.info("\033[91mNo checkpoint found. Starting training from scratch.\033[0m")
         
+    output_dir = os.path.dirname(config.dataset.latent_dataset_path)
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
         
-    if not os.path.exists(config.dataset.output_dir):
-        os.makedirs(config.dataset.output_dir)
-    
-    hdf5_path = os.path.join(config.dataset.output_dir, "latent_dataset_4d.h5")
+    hdf5_path = config.dataset.latent_dataset_path
     
     with h5py.File(hdf5_path, 'a') as f:
         # Create a group for patient metadata if it doesn't exist
@@ -267,15 +268,19 @@ def main(_):
             patients_group = f["patients"]
         
         # Process all patients
-        for patient_idx, patient_path in enumerate(patient_paths):
+        for patient_idx, patient_path in tqdm(enumerate(patient_paths), total=len(patient_paths), desc="Processing patients"):
             # Check if this patient is already in the dataset
             if patient_path in patients_group:
                 logging.info(f"Patient {patient_path} already exists in the dataset. Skipping.")
                 continue
             
-            nifti_file_path = os.path.join(config.dataset.root, patient_path, "sa.nii.gz")
+            nifti_file_path = os.path.join(config.dataset.root, patient_path, "cropped_sa.nii.gz")
             
             try:
+                if not os.path.exists(nifti_file_path):
+                    logging.warning(f"Patient {patient_path} is missing cropped_sa.nii.gz file. Skipping.")
+                    continue
+                    
                 nifti_image = nib.load(nifti_file_path)
                 image_data = nifti_image.get_fdata()  # Shape: [H, W, Z, T]
                                 
@@ -356,7 +361,7 @@ def main(_):
                 logging.error(f"Error processing patient {patient_path}: {str(e)}")
                 continue
             
-        logging.info(f"Dataset saved to {hdf5_path}")
+        logging.info(f"Dataset saved to {hdf5_path}") 
 
 
 if __name__ == "__main__":

@@ -56,7 +56,7 @@ def save_checkpoint(checkpoint_dir, model_params, optimizer_state, epoch, global
     with open(checkpoint_path, "wb") as f:
         pickle.dump(checkpoint_data, f)
         
-    print(f"Checkpoint saved at step {global_step} in {checkpoint_dir}")
+    logging.info(f"Checkpoint saved at step {global_step} in {checkpoint_dir}")
     
     
 def load_checkpoint(checkpoint_path):
@@ -69,7 +69,8 @@ def load_checkpoint(checkpoint_path):
     with open(checkpoint_path, "rb") as f:
         checkpoint_data = pickle.load(f)
 
-    print(f"Checkpoint loaded from {checkpoint_path}")
+    logging.info(f"Checkpoint loaded from {checkpoint_path}")
+    logging.info(f"psnr of checkpoint: {checkpoint_data['best_psnr']}")
     
     return (
         checkpoint_data["model_params"],
@@ -124,6 +125,7 @@ def get_config():
     config.eval.noise_scale = 1e-1  # Noise added to latents to prevent overfitting
     config.eval.num_epochs = 10
     config.eval.log_interval = 200
+    config.eval.checkpoint_path = ""
     logging.getLogger().setLevel(logging.INFO)
 
     return config
@@ -228,43 +230,13 @@ def main(_):
     enf_opt = optax.adam(learning_rate=config.optim.lr_enf)
     recon_enf_opt_state = enf_opt.init(recon_enf_params)
 
-    @jax.jit
-    def train_step(coords, img, z, enf_params, enf_opt_state, key):
 
-        def mse_loss(z, enf_params):  
-            out = recon_enf.apply(enf_params, coords, *z)  
-            return jnp.sum(jnp.mean((out - img) ** 2, axis=(1, 2)), axis=0)
-
-        key, subkey = jax.random.split(key)
-        loss, (z_grads, enf_grads) = jax.value_and_grad(mse_loss, argnums=(0, 1))(z, enf_params)
-                
-        z = jax.tree.map(lambda z, grad, lr: z - lr * grad, z, z_grads, config.optim.inner_lr)
-        
-        enf_grads, enf_opt_state = enf_opt.update(enf_grads, enf_opt_state)
-        enf_params = optax.apply_updates(enf_params, enf_grads)
-                
-        return (loss, z), enf_params, enf_opt_state, subkey
-
-    @jax.jit
-    def evaluate_batch(enf_params, coords, img, z):
-        # Compute reconstruction
-        img_r = recon_enf.apply(enf_params, coords, *z).reshape(img.shape)
-        
-        # Compute PSNR
-        mse = jnp.mean((img - img_r) ** 2)
-        max_pixel_value = 1.0 
-        psnr = 20 * jnp.log10(max_pixel_value / jnp.sqrt(mse))
-        return psnr
-    
-    
     # Loading checkpoint
-    checkpoint_path = "checkpoints/your_model_name/checkpoint_XXXXX.pkl" 
-    
-    if not os.path.exists(checkpoint_path):
-        raise FileNotFoundError(f"Checkpoint not found: {checkpoint_path}")
+    if not os.path.exists(config.eval.checkpoint_path):
+        raise FileNotFoundError(f"Checkpoint not found: {config.eval.checkpoint_path}")
         
-    logging.info(f"\033[93mLoading trained model from checkpoint: {checkpoint_path}\033[0m")
-    recon_enf_params, _, _, _, _ = load_checkpoint(checkpoint_path)
+    logging.info(f"\033[93mLoading trained model from checkpoint: {config.eval.checkpoint_path}\033[0m")
+    recon_enf_params, _, _, _, _ = load_checkpoint(config.eval.checkpoint_path)
     
     # Initialize latents for all test samples
     num_test_samples = len(test_dloader) * config.eval.batch_size
@@ -282,7 +254,7 @@ def main(_):
         even_sampling=config.recon_enf.even_sampling,
         latent_noise=config.recon_enf.latent_noise,
     )
-    
+       
     # Create optimization step for latents only
     @jax.jit
     def optimize_latent_step(coords, img, z, enf_params, key):
@@ -297,6 +269,17 @@ def main(_):
         z = jax.tree.map(lambda z, grad, lr: z - lr * grad, z, z_grads, config.optim.inner_lr)
         
         return (loss, z), subkey
+    
+    @jax.jit
+    def evaluate_batch(enf_params, coords, img, z):
+        # Compute reconstruction
+        img_r = recon_enf.apply(enf_params, coords, *z).reshape(img.shape)
+        
+        # Compute PSNR
+        mse = jnp.mean((img - img_r) ** 2)
+        max_pixel_value = 1.0 
+        psnr = 20 * jnp.log10(max_pixel_value / jnp.sqrt(mse))
+        return psnr
     
     best_psnr = float('-inf')
     
@@ -334,14 +317,7 @@ def main(_):
         for i, (img, _) in enumerate(test_dloader):
             # Extract corresponding latents
             z = jax.tree.map(lambda x: x[i*config.eval.batch_size:(i+1)*config.eval.batch_size], z_test_dataset)
-            
-            # Compute reconstruction
-            img_r = recon_enf.apply(recon_enf_params, x, *z).reshape(img.shape)
-            
-            # Compute PSNR
-            mse = jnp.mean((img - img_r) ** 2)
-            max_pixel_value = 1.0
-            psnr = 20 * jnp.log10(max_pixel_value / jnp.sqrt(mse))
+            psnr = evaluate_batch(recon_enf_params, x, img, z)
             psnrs_evaluation.append(psnr)
         
         avg_psnr = sum(psnrs_evaluation) / len(psnrs_evaluation)
